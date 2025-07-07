@@ -7,8 +7,12 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import MessageSnackbar from '../../../basic_utility/snackbar/MessageSnackbar';
+import { AuthContext } from '../../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
+  const { login } = React.useContext(AuthContext);
+  const navigate = useNavigate(); 
   const initialValues = {
     email: '',
     password: ''
@@ -28,11 +32,13 @@ export default function Login() {
         const user = response.data.user;
         if(user){
           localStorage.setItem('user', JSON.stringify(user));
+          login(user);
         }
         if (response.data.success) {
           setMessage(response.data.message);
           setMessageType('success');
           resetForm(); 
+          navigate('/school');
         } else {
           setMessage(response.data.message);
           setMessageType('error');

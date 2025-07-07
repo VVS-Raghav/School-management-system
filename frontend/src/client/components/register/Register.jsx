@@ -62,7 +62,7 @@ export default function Register() {
         }
       })
       .catch((error) => {
-        setMessage(error.response?.data?.message || 'Registration failed.Please try again.');
+        setMessage(error.response?.data?.message);
         setMessageType('error');
       });
     }

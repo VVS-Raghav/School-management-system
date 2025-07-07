@@ -62,7 +62,7 @@ export const registerSchool = async (req, res) => {
       });
 
       const savedSchool = await newSchool.save();
-      return res.status(201).json({ success: true, message: "School registered successfully", data: savedSchool });
+      return res.status(201).json({ success: true, message: "School registered successfully", school: savedSchool });
     } catch (e) {
       console.error("DB save error:", e);
       return res.status(500).json({ success: false, message: "Failed to save school" });
@@ -125,11 +125,11 @@ export const getAllSchools = async (req, res) => {
 export const getSchoolOwnData = async (req, res) => {
     try {
         const schoolId = req.user.schoolId;
-        const school = await School.findById(schoolId);
+        const school = await School.findById(schoolId).select(['-password']);
         if (!school) {
             return res.status(404).json({success:false, message: "School not found" });
         }
-        res.status(200).json({success:true, message: "Successfully fetched school data", data: school});
+        res.status(200).json({success:true, message: "Successfully fetched school data", school: school});
     } catch (error) {
         console.error("Error fetching school data:", error);
         res.status(500).json({success:false, message: "Internal server error" });
@@ -137,37 +137,60 @@ export const getSchoolOwnData = async (req, res) => {
 }
 
 export const updateSchool = async (req, res) => {
-  try {
-    const id = req.user.id;
-    const form = new formidable.IncomingForm();
-    form.parse(req, async (err, fields, files) => {
-        const school = await School.findById(id);
-        if (!school) {
-            return res.status(404).json({success:false, message: "School not found" });
-        }
-        if(files.image && files.image.length > 0) {
-            const photo = files.image[0];
-            let filepath = photo.filepath;
-            let originalFilename = photo.originalFilename.replace(" ", "_");
-            if(school.image) {
-                let oldImagePath = path.join(__dirname, process.env.SCHOOL_IMG_PATH, school.school_image);
-                if (fs.existsSync(oldImagePath)) {
-                    fs.unlinkSync(oldImagePath);
-                }
-            }
-            let newPath = path.join(__dirname,process.env.SCHOOL_IMG_PATH, originalFilename);
-            let photoData = fs.readFileSync(filepath);
-            fs.writeFileSync(newPath, photoData);
+  const form = formidable({ multiples: false, keepExtensions: true });
 
-            Object.keys(fields).forEach((field) => {
-                school[field] = fields[field][0];
-            });
-            await school.save();
-            res.status(200).json({success:true, message: "School updated successfully", data: school});
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.error("Form parse error:", err);
+      return res.status(400).json({ success: false, message: "Form parsing failed" });
+    }
+
+    try {
+      const id = req.user.id;
+      const school = await School.findById(id);
+
+      if (!school) {
+        return res.status(404).json({ success: false, message: "School not found" });
+      }
+
+      // ✅ Safely extract fields (if wrapped in arrays)
+      Object.entries(fields).forEach(([key, value]) => {
+        school[key] = Array.isArray(value) ? value[0] : value;
+      });
+
+      // ✅ Handle optional image update
+      const photo = Array.isArray(files.image) ? files.image[0] : files.image;
+
+      if (photo && photo.filepath && photo.originalFilename) {
+        const originalFilename = photo.originalFilename.trim().replace(/\s/g, "_").toLowerCase();
+        const filepath = photo.filepath;
+
+        // Delete old image if it exists
+        if (school.school_image) {
+          const oldImagePath = path.join(__dirname, process.env.SCHOOL_IMG_PATH, school.school_image);
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
         }
-    });
-  } catch (error) {
-    console.error("Error registering school:", error);
-    res.status(500).json({ success:false,message: "Internal server error" });
-  }
-}
+
+        // Save new image to disk
+        const newImagePath = path.join(__dirname, process.env.SCHOOL_IMG_PATH, originalFilename);
+        const photoData = fs.readFileSync(filepath);
+        fs.writeFileSync(newImagePath, photoData);
+
+        // Update DB field
+        school.school_image = originalFilename;
+      }
+
+      await school.save();
+      return res.status(200).json({
+        success: true,
+        message: "School updated successfully",
+        school: school,
+      });
+    } catch (error) {
+      console.error("Update error:", error);
+      return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  });
+};

@@ -27,15 +27,17 @@ import ExaminationsStudent from './student/components/examinations/ExaminationsS
 import NoticeStudent from './student/components/notice/NoticeStudent.jsx';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
+import ProtectedRoute from './guard/ProtectedRoute.jsx';
+import { AuthProvider } from './context/AuthContext.jsx';
 
 function App() {
 
   return (
-    <>
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
           {/* school component */}
-          <Route path='school' element={<School/>}>
+          <Route path='school' element={<ProtectedRoute allowedRoles={['SCHOOL']}><School/></ProtectedRoute>}>
             <Route index element={<Dashboard/>}/>
             <Route path='dashboard' element={<Dashboard/>}/>
             <Route path='attendance' element={<Attendance/>}/>
@@ -50,7 +52,7 @@ function App() {
 
 
           {/* student component */}
-          <Route path='student' element={<Student/>}>
+          <Route path='student' element={<ProtectedRoute allowedRoles={['STUDENT']}><Student/></ProtectedRoute>}>
             <Route index element={<StudentDetails/>}/>
             <Route path='attendance' element={<AttendanceStudent/>}/>
             <Route path='schedule' element={<ScheduleStudent/>}/>
@@ -60,7 +62,7 @@ function App() {
 
 
           {/* teacher component */}
-          <Route path='teacher' element={<Teacher/>}>
+          <Route path='teacher' element={<ProtectedRoute allowedRoles={['TEACHER']}><Teacher/></ProtectedRoute>}>
             <Route index element={<TeacherDetails/>}/>
             <Route path='attendance' element={<AttendanceTeacher/>}/>
             <Route path='schedule' element={<ScheduleTeacher/>}/>
@@ -77,7 +79,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </>
+    </AuthProvider>
   )
 }
 
