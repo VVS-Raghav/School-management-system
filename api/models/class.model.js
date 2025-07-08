@@ -12,13 +12,12 @@ const classSchema = new mongoose.Schema({
         trim: true
     },
     class_num : {
-        type: Number,
+        type: String,
         required: true,
     },
     attendee : {
         type: mongoose.Schema.ObjectId,
         ref: 'Teacher',
-        required: true
     },
     createdAt: {
         type: Date,

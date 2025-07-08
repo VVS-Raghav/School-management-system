@@ -6,7 +6,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import schoolRouter from './routes/school.routes.js';
-import e from 'express';
+import classRouter from './routes/class.routes.js';
+import subjectRouter from './routes/subject.router.js';
 
 const app = express();
 const corsOptions = {exposedHeaders: ['Authorization']};
@@ -19,7 +20,11 @@ mongoose.connect(process.env.MONGO_URI)
 .then(() => {console.log('Connected to MongoDB');})
 .catch((err) => {console.error('Error connecting to MongoDB:', err);});
 
+
+// Routers
 app.use('/api/school', schoolRouter);
+app.use('/api/class', classRouter);
+app.use('/api/subject', subjectRouter);
 
 
 

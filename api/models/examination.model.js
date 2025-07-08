@@ -30,4 +30,4 @@ const examinationSchema = new mongoose.Schema({
     }
 })
 
-export default mongoose.model('Examination', examinationSchema);
+export default mongoose.model('Exam', examinationSchema);
