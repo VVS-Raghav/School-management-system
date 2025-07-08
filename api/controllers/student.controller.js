@@ -30,7 +30,7 @@ export const registerStudent = async (req, res) => {
         const guardian = extract('guardian');
         const guardian_phone = extract('guardian_phone');
         const student_class = extract('student_class');
-        const school = req.user.schoolId; // From token
+        const school = req.user.schoolId;
 
         const photo = Array.isArray(files.image) ? files.image[0] : files.image;
 
@@ -127,14 +127,16 @@ export const getAllStudents = async (req, res) => {
         const schoolId = req.user.schoolId;
         filterQuery['school'] = schoolId;
 
-        if (req.query.hasOwnProperty('search')) {
-            filterQuery['name'] = { $regex: req.query.search, $option: "i" };
+        if ('search' in req.query) {
+            const str = req.query.search;
+            const safeStr = str.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
+            filterQuery['name'] = { $regex: safeStr, $options: "i" };
         }
-        if (req.query.hasOwnProperty('student_class')) {
+        if ('student_class' in req.query) {
             filterQuery['student_class'] = req.query.student_class;
         }
 
-        const students = await Student.find(filterQuery).select('-password');
+        const students = await Student.find(filterQuery).select('-password').populate('student_class', 'class_text class_num');
 
         res.status(200).json({
             success: true,
@@ -162,19 +164,29 @@ export const getStudentOwnData = async (req, res) => {
     }
 };
 
+// GET STUDENT USING ID
+export const getStudentWithId = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const schoolID = req.user.schoolID;
+        const student = await Student.findOne({ _id: id, school: schoolID }).select("-password");
+        if (!student) return res.status(404).json({ success: false, message: "Student not found" });
+        res.status(200).json({ success: true, student });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
 // UPDATE STUDENT
 export const updateStudent = async (req, res) => {
     const form = formidable({ multiples: false, keepExtensions: true });
-
     form.parse(req, async (err, fields, files) => {
         if (err) return res.status(400).json({ success: false, message: "Form parsing failed" });
-
         try {
-            const id = req.user.id;
-            const schoolID = req.user.schoolID;
+            const id = req.params.id;
+            const schoolID = req.user.schoolId;
             const student = await Student.findOne({ _id: id, school: schoolID }).select("-password");
             if (!student) return res.status(404).json({ success: false, message: "Student not found" });
-
             // Update fields
             Object.entries(fields).forEach(([key, value]) => {
                 student[key] = Array.isArray(value) ? value[0] : value;
@@ -199,13 +211,14 @@ export const updateStudent = async (req, res) => {
             }
 
             await student.save();
-            res.status(200).json({ success: true, message: "Student updated", student });
+            res.status(200).json({ success: true, message: "Student updated successfully", student });
         } catch (err) {
             console.error("Update error:", err);
             res.status(500).json({ success: false, message: "Internal server error" });
         }
     });
 };
+
 // DELETE STUDENT
 export const deleteStudent = async (req, res) => {
   try {

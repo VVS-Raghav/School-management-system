@@ -8,6 +8,8 @@ dotenv.config();
 import schoolRouter from './routes/school.routes.js';
 import classRouter from './routes/class.routes.js';
 import subjectRouter from './routes/subject.router.js';
+import studentRouter from './routes/student.routes.js';
+import teacherRouter from './routes/teacher.routes.js';
 
 const app = express();
 const corsOptions = {exposedHeaders: ['Authorization']};
@@ -25,6 +27,8 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/school', schoolRouter);
 app.use('/api/class', classRouter);
 app.use('/api/subject', subjectRouter);
+app.use('/api/student', studentRouter);
+app.use('/api/teacher',teacherRouter);
 
 
 
