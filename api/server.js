@@ -10,6 +10,7 @@ import classRouter from './routes/class.routes.js';
 import subjectRouter from './routes/subject.router.js';
 import studentRouter from './routes/student.routes.js';
 import teacherRouter from './routes/teacher.routes.js';
+import scheduleRouter from './routes/schedule.router.js';
 
 const app = express();
 const corsOptions = {exposedHeaders: ['Authorization']};
@@ -29,6 +30,7 @@ app.use('/api/class', classRouter);
 app.use('/api/subject', subjectRouter);
 app.use('/api/student', studentRouter);
 app.use('/api/teacher',teacherRouter);
+app.use('/api/schedule',scheduleRouter);
 
 
 
