@@ -153,7 +153,7 @@ export const getAllStudents = async (req, res) => {
 export const getStudentOwnData = async (req, res) => {
     try {
         const id = req.user.id;
-        const schoolID = req.user.schoolID;
+        const schoolID = req.user.schoolId;
         const student = await Student.findOne({ _id: id, school: schoolID }).select("-password");
 
         if (!student) return res.status(404).json({ success: false, message: "Student not found" });
@@ -168,9 +168,9 @@ export const getStudentOwnData = async (req, res) => {
 export const getStudentWithId = async (req, res) => {
     try {
         const id = req.params.id;
-        const schoolID = req.user.schoolID;
-        const student = await Student.findOne({ _id: id, school: schoolID }).select("-password");
-        if (!student) return res.status(404).json({ success: false, message: "Student not found" });
+        const schoolID = req.user.schoolId;
+        const student = await Student.findOne({ _id: id, school: schoolID }).select("-password").populate('student_class');;
+        if (!student)return res.status(404).json({ success: false, message: "Student not found" });
         res.status(200).json({ success: true, student });
     } catch (err) {
         res.status(500).json({ success: false, message: "Internal server error" });

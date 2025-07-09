@@ -25,6 +25,7 @@ import ScheduleStudent from './student/components/schedule/ScheduleStudent.jsx';
 import StudentDetails from './student/components/student_details/StudentDetails.jsx';
 import ExaminationsStudent from './student/components/examinations/ExaminationsStudent.jsx';
 import NoticeStudent from './student/components/notice/NoticeStudent.jsx';
+import AttendanceDetails from './school/components/attendance/AttendanceDetails.jsx';
 
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import ProtectedRoute from './guard/ProtectedRoute.jsx';
@@ -41,6 +42,7 @@ function App() {
             <Route index element={<Dashboard/>}/>
             <Route path='dashboard' element={<Dashboard/>}/>
             <Route path='attendance' element={<AttendanceList/>}/>
+            <Route path='attendance/:id' element={<AttendanceDetails/>}/>
             <Route path='class' element={<Class/>}/>
             <Route path='teachers' element={<Teachers/>}/>
             <Route path='examinations' element={<Examinations/>}/>

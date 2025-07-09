@@ -4,6 +4,7 @@ import MessageSnackbar from '../../../basic_utility/snackbar/MessageSnackbar';
 import SchoolIcon from '@mui/icons-material/School';
 import axios from 'axios';
 import { baseAPI } from '../../../environment';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function StudentsAttendanceTable() {
@@ -17,6 +18,7 @@ export default function StudentsAttendanceTable() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [message, setMessage] = React.useState('');
   const [messageType, setMessageType] = React.useState('success');
+  const navigate = useNavigate();
 
   const handleClass = async (e) => {
     setSelectedClass(e.target.value);
@@ -102,6 +104,10 @@ export default function StudentsAttendanceTable() {
 
   const handleClose = () => {
     setMessage("");
+  }
+
+  const handleClick = (id)=>{
+    navigate(`/school/attendance/${id}`);
   }
 
   useEffect(() => {
@@ -231,7 +237,7 @@ export default function StudentsAttendanceTable() {
                     <TableCell align="center">{s.student_class?.class_text} {s.student_class?.class_num}</TableCell>
                     <TableCell align="center">{s.attendancePercentage || 0}%</TableCell>
                     <TableCell align="center">
-                      <Button size="small" variant="outlined" color="primary">
+                      <Button size="small" variant="outlined" color="primary" onClick={()=>handleClick(s._id)}>
                         View
                       </Button>
                     </TableCell>
