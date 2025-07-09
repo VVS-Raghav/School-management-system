@@ -6,7 +6,22 @@ import Class from "../models/class.model.js";
 // CREATE schedule
 export const createSchedule = async (req, res) => {
     try {
-        const { teacher, subject,selectedClass, startTime, endTime } = req.body;
+        const { teacher, subject, selectedClass, startTime, endTime } = req.body;
+
+        const isOverlapping = await Schedule.findOne({
+            class: selectedClass,
+            school: req.user.schoolId,
+            startTime: { $lt: endTime },
+            endTime: { $gt: startTime },
+        });
+
+        if (isOverlapping) {
+            return res.status(400).json({
+                success: false,
+                message: 'This time slot overlaps with an existing session.',
+            });
+        }
+
         const newSchedule = new Schedule({
             school: req.user.schoolId,
             teacher,
@@ -15,7 +30,6 @@ export const createSchedule = async (req, res) => {
             startTime,
             endTime
         });
-
         await newSchedule.save();
 
         return res.status(200).json({
@@ -33,7 +47,7 @@ export const getAllSchedules = async (req, res) => {
     try {
         const classId = req.params.id;
         const schoolId = req.user.schoolId;
-        const schedules = await Schedule.find({ school: schoolId, class: classId }).populate(['teacher','subject']);
+        const schedules = await Schedule.find({ school: schoolId, class: classId }).populate(['teacher', 'subject']);
 
         return res.status(200).json({
             success: true,
@@ -51,26 +65,41 @@ export const getAllSchedules = async (req, res) => {
 
 // GET single schedule by ID
 export const getSchedule = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const schedule = await Schedule.findById(id)
+    try {
+        const { id } = req.params;
+        const schedule = await Schedule.findById(id)
 
-    if (!schedule)return res.status(404).json({ message: 'Schedule not found' });
-    res.status(200).json({ success: true, data: schedule });
-  } catch (error) {
-    console.error('Error fetching schedule:', error);
-    res.status(500).json({ message: 'Server error while fetching schedule' });
-  }
+        if (!schedule) return res.status(404).json({ message: 'Schedule not found' });
+        res.status(200).json({ success: true, data: schedule });
+    } catch (error) {
+        console.error('Error fetching schedule:', error);
+        res.status(500).json({ message: 'Server error while fetching schedule' });
+    }
 };
-
 
 // UPDATE schedule
 export const updateSchedule = async (req, res) => {
     try {
         const scheduleId = req.params.id;
         const schoolId = req.user.schoolId;
-        
-        const updated = await Schedule.findOneAndUpdate({ _id: scheduleId, school: schoolId },{...req.body},{ new: true });
+        const { selectedClass, startTime, endTime } = req.body;
+
+        const isOverlapping = await Schedule.findOne({
+            _id: { $ne: scheduleId },
+            class: selectedClass,
+            school: schoolId,
+            startTime: { $lt: endTime },
+            endTime: { $gt: startTime },
+        });
+
+        if (isOverlapping) {
+            return res.status(400).json({
+                success: false,
+                message: 'This time slot overlaps with another existing session.',
+            });
+        }
+
+        const updated = await Schedule.findOneAndUpdate({ _id: scheduleId, school: schoolId }, { ...req.body }, { new: true });
 
         if (!updated) {
             return res.status(404).json({
@@ -100,7 +129,7 @@ export const deleteSchedule = async (req, res) => {
         const scheduleId = req.params.id;
         const schoolId = req.user.schoolId;
 
-        await Schedule.findOneAndDelete({_id: scheduleId,school: schoolId});
+        await Schedule.findOneAndDelete({ _id: scheduleId, school: schoolId });
         return res.status(200).json({
             success: true,
             message: "Schedule deleted successfully"

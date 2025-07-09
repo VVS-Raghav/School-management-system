@@ -1,6 +1,6 @@
 import './App.css'
 import School from './school/School.jsx'
-import Attendance from './school/components/attendance/Attendance.jsx'
+import AttendanceList from './school/components/attendance/AttendanceList.jsx'
 import Dashboard from './school/components/dashboard/Dashboard.jsx';
 import Class from './school/components/class/Class.jsx';
 import Schedule from './school/components/schedule/Schedule.jsx';
@@ -40,7 +40,7 @@ function App() {
           <Route path='school' element={<ProtectedRoute allowedRoles={['SCHOOL']}><School/></ProtectedRoute>}>
             <Route index element={<Dashboard/>}/>
             <Route path='dashboard' element={<Dashboard/>}/>
-            <Route path='attendance' element={<Attendance/>}/>
+            <Route path='attendance' element={<AttendanceList/>}/>
             <Route path='class' element={<Class/>}/>
             <Route path='teachers' element={<Teachers/>}/>
             <Route path='examinations' element={<Examinations/>}/>

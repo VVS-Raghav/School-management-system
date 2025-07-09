@@ -68,3 +68,35 @@ export const getAllClasses = async (req, res) => {
         });
     }
 };
+
+export const updateClass = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    const updatedClass = await Class.findByIdAndUpdate(id, updates, { new: true });
+
+    if (!updatedClass) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+
+    res.status(200).json({
+      message: "Class updated successfully",
+      data: updatedClass,
+    });
+  } catch (error) {
+    console.error("Error updating class:", error);
+    res.status(500).json({ message: "Failed to update class" });
+  }
+};
+
+export const getClassById = async (req, res) => {
+  try {
+    const cls = await Class.findById(req.params.id).populate('class_teacher');
+    if (!cls) return res.status(404).json({ message: 'Class not found' });
+
+    res.status(200).json({ data: cls });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching class' });
+  }
+};
