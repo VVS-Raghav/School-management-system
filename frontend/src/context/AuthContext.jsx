@@ -5,12 +5,10 @@ export const AuthContext = React.createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-//   const [loading, setLoading] = React.useState(true);
 
   const login = (userData) => {
     setUser(userData);
     setIsAuthenticated(true);
-    // setLoading(false);
   };
 
   const logout = () => {
@@ -18,7 +16,6 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    // setLoading(false);
   };
 
   useEffect(() => {

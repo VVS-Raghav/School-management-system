@@ -75,12 +75,11 @@ export default function Register() {
   }
 
   return (
-    <Box sx={{background:'url(https://static.vecteezy.com/system/resources/previews/047/784/019/non_2x/an-illustration-of-online-learning-with-a-group-of-students-using-laptops-and-a-teacher-presenting-a-pie-chart-free-vector.jpg)',backgroundSize:'185vh',textAlign:'center',backgroundRepeat:'no-repeat',height:'90vh', display: 'flex',
+    <Box sx={{background:'url(https://static.vecteezy.com/system/resources/previews/047/784/019/non_2x/an-illustration-of-online-learning-with-a-group-of-students-using-laptops-and-a-teacher-presenting-a-pie-chart-free-vector.jpg)',backgroundSize:'185vh',textAlign:'center',backgroundRepeat:'no-repeat',height:'83vh', display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',}}>
     {message && <MessageSnackbar message={message} messageType={messageType} handleClose={handleClose}/>}
-    <Typography variant='h2' sx={{textAlign:'center',justifyContent:'center',color:'darkblue'}}>Register</Typography>
     <Box
       component="form"
       sx={{ '& > :not(style)': { m: 1, width: '50ch' },
@@ -90,15 +89,17 @@ export default function Register() {
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 3,
-        padding: 5,
+        padding: 3.5,
         backgroundColor: 'rgba(255, 255, 255)'
       }}
       noValidate
       autoComplete="off"
       onSubmit={formik.handleSubmit}
     >
+    <Typography variant='h2' sx={{textAlign:'center',justifyContent:'center',color:'darkblue'}}>Register</Typography>
 
-      <Typography>Add school image</Typography>
+
+      <Typography variant='subtitle'>Add school image</Typography>
       <TextField
         type='file'
         inputRef={fileInputRef}

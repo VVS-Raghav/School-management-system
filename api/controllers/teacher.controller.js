@@ -140,12 +140,12 @@ export const getAllTeachers = async (req, res) => {
 export const getTeacherOwnData = async (req, res) => {
   try {
     const id = req.user.id;
-    const schoolID = req.user.schoolID;
+    const schoolID = req.user.schoolId;
     const teacher = await Teacher.findOne({ _id: id, school: schoolID }).select("-password");
 
     if (!teacher) return res.status(404).json({ success: false, message: "Teacher not found" });
 
-    res.status(200).json({ success: true, teacher });
+    res.status(200).json({ success: true, data:teacher });
   } catch (err) {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
@@ -155,7 +155,7 @@ export const getTeacherOwnData = async (req, res) => {
 export const getTeacherWithId = async (req, res) => {
   try {
     const id = req.params.id;
-    const schoolID = req.user.schoolID;
+    const schoolID = req.user.schoolId;
     const teacher = await Teacher.findOne({ _id: id, school: schoolID }).select("-password");
 
     if (!teacher) return res.status(404).json({ success: false, message: "Teacher not found" });

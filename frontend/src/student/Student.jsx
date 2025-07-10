@@ -26,6 +26,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RuleIcon from '@mui/icons-material/Rule';
 import QuizIcon from '@mui/icons-material/Quiz';
 import HomeIcon from '@mui/icons-material/Home';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 220;
 
@@ -125,7 +126,8 @@ export default function Student() {
     {link:"/student/schedule",component:"Schedule",icon:CalendarMonthIcon},
     {link:"/student/attendance",component:"Attendance",icon:RuleIcon},
     {link:"/student/examinations",component:"Examinations",icon:QuizIcon},
-    {link:"/student/notice",component:"Notice",icon:NotificationsActiveIcon}
+    {link:"/student/notice",component:"Notice",icon:NotificationsActiveIcon},
+    {link:"/logout",component:"Logout",icon:LogoutIcon}
   ]
 
   const navigate = useNavigate();
