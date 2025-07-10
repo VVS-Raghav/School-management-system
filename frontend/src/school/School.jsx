@@ -133,8 +133,8 @@ export default function School() {
     {link:"/school/teachers",component:"Teachers",icon:PeopleIcon},
     {link:"/school/schedule",component:"Schedule",icon:CalendarMonthIcon},
     {link:"/school/attendance",component:"Attendance",icon:RuleIcon},
-    {link:"/school/notice",component:"Notice",icon:NotificationsActiveIcon},
-    {link:"/school/examinations",component:"Examinations",icon:QuizIcon}
+    {link:"/school/examinations",component:"Examinations",icon:QuizIcon},
+    {link:"/school/notice",component:"Notice",icon:NotificationsActiveIcon}
   ]
 
   const navigate = useNavigate();
