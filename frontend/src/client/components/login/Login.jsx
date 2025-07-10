@@ -58,7 +58,7 @@ export default function Login() {
   }
 
   return (
-    <Box sx={{background:'url(https://static.vecteezy.com/system/resources/previews/047/784/019/non_2x/an-illustration-of-online-learning-with-a-group-of-students-using-laptops-and-a-teacher-presenting-a-pie-chart-free-vector.jpg)',backgroundSize:'185vh',textAlign:'center',backgroundRepeat:'no-repeat',height:'90vh', display: 'flex',flexDirection: 'column',alignItems: 'center',
+    <Box sx={{background:'url(https://static.vecteezy.com/system/resources/previews/047/784/019/non_2x/an-illustration-of-online-learning-with-a-group-of-students-using-laptops-and-a-teacher-presenting-a-pie-chart-free-vector.jpg)',backgroundSize:'185vh',textAlign:'center',backgroundRepeat:'no-repeat',height:'83vh', display: 'flex',flexDirection: 'column',alignItems: 'center',
     justifyContent: 'center'}}>
     {message && <MessageSnackbar message={message} messageType={messageType} handleClose={handleClose}/>}
     <Box
@@ -70,7 +70,7 @@ export default function Login() {
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 3,
-        padding: 5,
+        padding: 3.5,
         backgroundColor: 'rgba(255, 255, 255)'
       }}
       noValidate

@@ -30,6 +30,7 @@ import AttendanceDetails from './school/components/attendance/AttendanceDetails.
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import ProtectedRoute from './guard/ProtectedRoute.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
+import Logout from './client/components/logout/Logout.jsx';
 
 function App() {
 
@@ -77,6 +78,7 @@ function App() {
           <Route path='' element={<Client/>}>
             <Route index element={<Home/>}/>
             <Route path='login' element={<Login/>}/>
+            <Route path='logout' element={<Logout/>}/>
             <Route path='register' element={<Register/>}/>
           </Route>
         </Routes>

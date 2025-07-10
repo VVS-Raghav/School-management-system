@@ -13,6 +13,7 @@ import teacherRouter from './routes/teacher.routes.js';
 import scheduleRouter from './routes/schedule.routes.js';
 import attendanceRouter from './routes/attendance.routes.js';
 import examinationRouter from './routes/examination.routes.js';
+import noticeRouter from './routes/notice.routes.js';
 
 const app = express();
 const corsOptions = {exposedHeaders: ['Authorization']};
@@ -35,6 +36,7 @@ app.use('/api/teacher',teacherRouter);
 app.use('/api/schedule',scheduleRouter);
 app.use('/api/attendance',attendanceRouter);
 app.use('/api/examination',examinationRouter);
+app.use('/api/notice',noticeRouter);
 
 
 

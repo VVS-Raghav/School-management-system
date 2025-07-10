@@ -30,7 +30,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import QuizIcon from '@mui/icons-material/Quiz';
 import SchoolIcon from '@mui/icons-material/School';
 import HomeIcon from '@mui/icons-material/Home';
-import Home from '../client/components/home/Home';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 220;
 
@@ -134,7 +134,8 @@ export default function School() {
     {link:"/school/schedule",component:"Schedule",icon:CalendarMonthIcon},
     {link:"/school/attendance",component:"Attendance",icon:RuleIcon},
     {link:"/school/examinations",component:"Examinations",icon:QuizIcon},
-    {link:"/school/notice",component:"Notice",icon:NotificationsActiveIcon}
+    {link:"/school/notice",component:"Notice",icon:NotificationsActiveIcon},
+    {link:"/logout",component:"Logout",icon:LogoutIcon}
   ]
 
   const navigate = useNavigate();
