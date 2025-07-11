@@ -42,12 +42,42 @@ export const createSchedule = async (req, res) => {
     }
 };
 
-// GET all schedules for a school
+// GET all schedules for a class
 export const getAllSchedules = async (req, res) => {
     try {
         const classId = req.params.id;
         const schoolId = req.user.schoolId;
         const schedules = await Schedule.find({ school: schoolId, class: classId }).populate(['teacher', 'subject']);
+
+        return res.status(200).json({
+            success: true,
+            message: "Schedules fetched successfully",
+            data: schedules
+        });
+    } catch (error) {
+        console.error("Error fetching schedules:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        });
+    }
+};
+
+// GET all schedule for a teacher
+export const getAllSchedulesforTeacher = async (req, res) => {
+    try {
+        const teacherId = req.user.id;
+        const schoolId = req.user.schoolId;
+
+        const schedules = await Schedule.find({ school: schoolId, teacher: teacherId })
+            .populate({
+                path: 'subject',
+                select: 'subject_name'
+            })
+            .populate({
+                path: 'class',
+                select: 'class_text class_num'
+            });
 
         return res.status(200).json({
             success: true,

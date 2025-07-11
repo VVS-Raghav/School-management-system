@@ -20,8 +20,6 @@ export default function NoticeComponent() {
   const [messageType, setMessageType] = useState('success');
   const [createMode, setCreateMode] = useState(false);
 
-  const audiences = ['All', 'Students', 'Teachers'];
-
   const fetchNotices = async () => {
     try {
       const res = await axios.get(`${baseAPI}/notice/all`);
@@ -157,11 +155,9 @@ export default function NoticeComponent() {
                 onChange={handleChange}
                 label="Audience"
               >
-                {audiences.map((aud) => (
-                  <MenuItem key={aud} value={aud}>
-                    {aud}
-                  </MenuItem>
-                ))}
+                <MenuItem value="ALL">All</MenuItem>
+                <MenuItem value="STUDENT">Students</MenuItem>
+                <MenuItem value="TEACHER">Teachers</MenuItem>
               </Select>
             </FormControl>
 
@@ -186,7 +182,7 @@ export default function NoticeComponent() {
           <Table stickyHeader>
             <TableHead>
               <TableRow sx={{ backgroundColor: '#f1f5f9' }}>
-                <TableCell sx={{ fontWeight: 'bold'}}>Title</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
                 <TableCell sx={{ fontWeight: 'bold', width: '60%' }}>Message</TableCell>
                 <TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Issued On</TableCell>
                 <TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }} align="center">Actions</TableCell>

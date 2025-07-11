@@ -21,12 +21,25 @@ export const createNotice = async (req, res) => {
   }
 };
 
-// Get all notices for a school
+// Get all notices for a school for a role
 export const getAllNotices = async (req, res) => {
   try {
     const school = req.user.schoolId;
-    const notices = await Notice.find({school,createdAt:{ $gte: new Date(today.setDate(today.getDate() - 7))}}).sort({ createdAt: -1 });
-    res.status(200).json({ message: 'Notices fetched successfully', data: notices });
+    const role = req.user.role;
+    const today = new Date();
+    const sevenDaysAgo = new Date(today.setDate(today.getDate() - 7));
+
+    const filter = {
+      school,
+      createdAt: { $gte: sevenDaysAgo }
+    };
+
+    if (role !== 'SCHOOL') {
+      filter.audience = { $in: ['ALL', role] };
+    }
+
+    const notices = await Notice.find(filter).sort({ createdAt: -1 });
+    res.status(200).json({message: 'Notices fetched successfully',data: notices});
   } catch (error) {
     console.error('Error fetching notices:', error);
     res.status(500).json({ error: 'Failed to fetch notices' });

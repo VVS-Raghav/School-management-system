@@ -120,7 +120,7 @@ export const loginStudent = async (req, res) => {
     }
 };
 
-// GET ALL STUDENTS OF A SCHOOL
+// GET ALL STUDENTS OF A SCHOOL AND QUERY
 export const getAllStudents = async (req, res) => {
     try {
         let filterQuery = {};

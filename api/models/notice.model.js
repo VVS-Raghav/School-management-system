@@ -18,8 +18,8 @@ const noticeSchema = new mongoose.Schema({
     },
     audience: {
         type: String,
-        enum: ['All', 'Students', 'Teachers'],
-        default: 'All',
+        enum: ['ALL', 'STUDENT', 'TEACHER'],
+        default: 'ALL',
         required: true
     },
     createdAt: {

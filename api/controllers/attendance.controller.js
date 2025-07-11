@@ -2,38 +2,38 @@ import Attendance from '../models/attendance.model.js';
 import dayjs from 'dayjs';
 
 // Mark student attendance
-export const toggleAttendance = async (req, res) => {
+export const markAttendance = async (req, res) => {
   try {
-    const { studentId, classId, date, status } = req.body;
+    const { attendance, date } = req.body;
+    const classId = req.params.classId;
     const schoolId = req.user.schoolId;
 
-    const formattedDate = dayjs(date).startOf('day').toDate();
+    const formattedDate = dayjs(date || new Date()).startOf('day').toDate();
 
-    const existing = await Attendance.findOne({
-      student: studentId,
-      class: classId,
-      school: schoolId,
-      date: formattedDate,
-    });
-
-    if (existing) {
-      existing.status = status;
-      await existing.save();
-      return res.status(200).json({ success: true, message: 'Attendance updated', data: existing });
+    if (!Array.isArray(attendance) || attendance.length === 0) {
+      return res.status(400).json({ success: false, message: 'Attendance list is required' });
     }
 
-    const newAttendance = new Attendance({
-      student: studentId,
-      class: classId,
-      school: schoolId,
-      date: formattedDate,
-      status,
-    });
+    const results = [];
 
-    await newAttendance.save();
-    return res.status(201).json({ success: true, message: 'Attendance marked', data: newAttendance });
+    for (const { studentId, status } of attendance) {
+      try {
+        const newRecord = new Attendance({
+          student: studentId,
+          class: classId,
+          school: schoolId,
+          date: formattedDate,
+          status,
+        });
+        const saved = await newRecord.save();
+        results.push(saved);
+      } catch (innerErr) {
+        console.error(`Error saving attendance for student ${studentId}:`, innerErr.message);
+      }
+    }
+    return res.status(200).json({success: true,message: 'Attendance marked successfully',data: results,});
   } catch (err) {
-    console.error('Error toggling attendance:', err);
+    console.error('Error marking attendance:', err);
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
@@ -73,9 +73,9 @@ export const isAttendanceTaken = async (req, res) => {
     });
 
     if(recordExists)
-        return res.status(200).json({attendanceTaken:true,message:"Attendance already taken for today"});
-    else
-        return res.status(200).json({attendanceTaken:false,message:"Attendance not taken yet for today"});
+      return res.status(200).json({attendanceTaken:true,message:"Attendance already taken for today"});
+    else 
+      return res.status(200).json({attendanceTaken:false,message:"Attendance not taken yet for today"});
   } catch (err) {
     console.error('Error checking attendance status:', err);
     return res.status(500).json({ success: false, message: 'Internal server error' });

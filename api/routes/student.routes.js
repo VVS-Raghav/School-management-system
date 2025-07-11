@@ -5,7 +5,7 @@ import {registerStudent,loginStudent,getAllStudents,getStudentOwnData,getStudent
 const router = express.Router();
 
 router.post('/register', authMiddleware(['SCHOOL']), registerStudent);
-router.get('/all', authMiddleware(['SCHOOL']), getAllStudents);
+router.get('/all', authMiddleware(['SCHOOL','TEACHER']), getAllStudents);
 router.get('/fetch/:id', authMiddleware(['SCHOOL']), getStudentWithId);
 router.patch('/update/:id', authMiddleware(['SCHOOL']), updateStudent);
 router.delete('/delete/:id', authMiddleware(['SCHOOL']), deleteStudent);

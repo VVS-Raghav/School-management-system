@@ -8,9 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-
-
-export default function ExaminationTablePage() {
+export default function Examinations() {
   const [classList, setClassList] = useState([]);
   const [selectedClass, setSelectedClass] = useState('');
   const [subjectList, setSubjectList] = useState([]);
