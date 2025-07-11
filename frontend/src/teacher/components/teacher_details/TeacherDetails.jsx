@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Paper,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  CardMedia
-} from '@mui/material';
+import {Box,Paper,Typography,Table,TableBody,TableCell,TableContainer,TableRow,CardMedia} from '@mui/material';
 import axios from 'axios';
 import { baseAPI } from '../../../environment';
 
@@ -42,7 +32,33 @@ export default function TeacherDetails() {
   }
 
   return (
-    <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+    <Box
+      sx={{
+        px: 3,
+        py: 5,
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        background: 'linear-gradient(135deg, #e3f2fd 0%, #ffffff 100%)',
+      }}
+    >
+      <Typography
+        variant="h4"
+        fontWeight={700}
+        color="primary"
+        sx={{
+          mb: 3,
+          textAlign: 'center',
+          background: 'linear-gradient(90deg, #1976d2, #64b5f6)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          letterSpacing: 1,
+        }}
+      >
+        Teacher Details
+      </Typography>
+
       <Paper elevation={3} sx={{ p: 3, maxWidth: 600, width: '100%', borderRadius: 3 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 1.5 }}>
           <CardMedia

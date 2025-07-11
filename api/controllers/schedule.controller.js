@@ -1,7 +1,4 @@
 import Schedule from "../models/schedule.model.js";
-import Teacher from "../models/teacher.model.js";
-import Subject from "../models/subject.model.js";
-import Class from "../models/class.model.js";
 
 // CREATE schedule
 export const createSchedule = async (req, res) => {
@@ -47,7 +44,8 @@ export const getAllSchedules = async (req, res) => {
     try {
         const classId = req.params.id;
         const schoolId = req.user.schoolId;
-        const schedules = await Schedule.find({ school: schoolId, class: classId }).populate(['teacher', 'subject']);
+        const schedules = await Schedule.find({ school: schoolId, class: classId })
+                            .populate('teacher', 'name').populate('subject','subject_name');
 
         return res.status(200).json({
             success: true,

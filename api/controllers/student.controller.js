@@ -154,7 +154,7 @@ export const getStudentOwnData = async (req, res) => {
     try {
         const id = req.user.id;
         const schoolID = req.user.schoolId;
-        const student = await Student.findOne({ _id: id, school: schoolID }).select("-password");
+        const student = await Student.findOne({ _id: id, school: schoolID }).select("-password").populate('student_class','class_text class_num');
 
         if (!student) return res.status(404).json({ success: false, message: "Student not found" });
 
