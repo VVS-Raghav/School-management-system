@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import axios from 'axios';
+import {baseAPI} from '../../../../environment'
 
 
 export default function Gallery() {
@@ -35,7 +36,7 @@ export default function Gallery() {
   };
 
   React.useEffect(() => {
-    axios.get('http://localhost:5000/api/school/all')
+    axios.get(`${baseAPI}/school/all`)
       .then((response) => {
         setSchools(response.data.schools);
       })

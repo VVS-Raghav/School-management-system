@@ -1,2 +1,2 @@
-const baseAPI = 'http://localhost:5000/api';
-export {baseAPI};
+const baseAPI = import.meta.env.BASE_URL;
+export { baseAPI };
