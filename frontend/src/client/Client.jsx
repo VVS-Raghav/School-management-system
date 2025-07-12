@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "./utility_components/navbar/navbar";
-import Footer from "./utility_components/footer/Footer";
+import Navbar from "./utility_components/navbar/Navbar.jsx";
+import Footer from "./utility_components/footer/Footer.jsx";
 import Box from "@mui/material/Box";
 
 export default function Client() {
