@@ -11,12 +11,17 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../context/AuthContext';
 
-const pages = [{link:'/',component:'Home'}, {link:'/login',component:'Login'}, {link:'/register',component:'Register'}];
+
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const { user, isAuthenticated } = React.useContext(AuthContext);
+    let pages;
+    if(!isAuthenticated)pages = [{link:'/',component:'Home'}, {link:'/login',component:'Login'}, {link:'/register',component:'Register'}];
+    else pages = [{link:'/',component:'Home'}, {link:'/logout',component:'Logout'}, {link:`/${user.role.toLowerCase()}`,component:'Dashboard'}];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

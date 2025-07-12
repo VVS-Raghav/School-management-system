@@ -69,6 +69,7 @@ export default function Login() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        overflowX: 'hidden',
       }}
     >
       {message && <MessageSnackbar message={message} messageType={messageType} handleClose={handleClose} />}

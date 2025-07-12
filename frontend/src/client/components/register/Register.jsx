@@ -78,7 +78,9 @@ export default function Register() {
     <Box sx={{background:'url(https://static.vecteezy.com/system/resources/previews/047/784/019/non_2x/an-illustration-of-online-learning-with-a-group-of-students-using-laptops-and-a-teacher-presenting-a-pie-chart-free-vector.jpg)',backgroundSize:'185vh',textAlign:'center',backgroundRepeat:'no-repeat',height:'83vh', display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',}}>
+        justifyContent: 'center',
+        overflowX: 'hidden',
+    }}>
     {message && <MessageSnackbar message={message} messageType={messageType} handleClose={handleClose}/>}
     <Box
       component="form"
