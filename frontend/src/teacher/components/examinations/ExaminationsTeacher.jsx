@@ -10,22 +10,25 @@ import { baseAPI } from '../../../environment';
 export default function ExaminationsTeacher() {
   const [classList, setClassList] = useState([]);
   const [selectedClass, setSelectedClass] = useState('');
-  const [exams, setExams] = useState([]);
+  const [examRows, setExamRows] = useState([]);
 
   const columns = [
-    { id: 'subject_name', label: 'Subject', minWidth: 130 },
+    { id: 'subject', label: 'Subject', minWidth: 130 },
     { id: 'class', label: 'Class', minWidth: 80 },
     {
-      id: 'examDate', label: 'Exam Date', minWidth: 140,
+      id: 'examDate',
+      label: 'Exam Date',
+      minWidth: 140,
       format: (value) => new Date(value).toDateString().slice(4)
     },
     { id: 'examType', label: 'Exam Type', minWidth: 140 },
+    { id: 'examSession', label: 'Exam Session', minWidth: 140 }
   ];
 
   const fetchClasses = async () => {
     try {
       const res = await axios.get(`${baseAPI}/class/all`, {
-        headers: { Authorization: localStorage.getItem('token') },
+        headers: { Authorization: localStorage.getItem('token') }
       });
       setClassList(res.data.data);
     } catch (err) {
@@ -35,16 +38,24 @@ export default function ExaminationsTeacher() {
 
   const fetchExams = async (classId = '') => {
     try {
-      const url = classId ? `${baseAPI}/examination/class/${classId}` : `${baseAPI}/examination/all`;
+      const url = classId ? `${baseAPI}/examination/class/${classId}`: `${baseAPI}/examination/all`;
+
       const res = await axios.get(url, {
-        headers: { Authorization: localStorage.getItem('token') },
+        headers: { Authorization: localStorage.getItem('token') }
       });
-      const formatted = res.data.exams.map((exam) => ({
-        ...exam,
-        subject_name: exam.subject.subject_name,
-        class: `${exam.class.class_text} ${exam.class.class_num}`,
-      }));
-      setExams(formatted);
+
+      // Flatten subjects into individual exam rows
+      const flattened = res.data.exams.flatMap((exam) =>
+        exam.subjects.map((sub) => ({
+          subject: sub.subject.subject_name,
+          examDate: sub.examDate,
+          examType: exam.examType,
+          examSession: exam.examSession,
+          class: `${exam.class.class_text} ${exam.class.class_num}`
+        }))
+      );
+
+      setExamRows(flattened);
     } catch (err) {
       console.error('Error fetching exams:', err);
     }
@@ -89,7 +100,7 @@ export default function ExaminationsTeacher() {
           width: '100%',
           borderRadius: 3,
           overflow: 'hidden',
-          boxShadow: 3,
+          boxShadow: 3
         }}
       >
         <TableContainer sx={{ maxHeight: '66vh' }}>
@@ -105,7 +116,7 @@ export default function ExaminationsTeacher() {
                       minWidth: column.minWidth,
                       backgroundColor: '#f1f5f9',
                       color: '#1e293b',
-                      borderBottom: '2px solid #e2e8f0',
+                      borderBottom: '2px solid #e2e8f0'
                     }}
                   >
                     {column.label}
@@ -115,13 +126,13 @@ export default function ExaminationsTeacher() {
             </TableHead>
 
             <TableBody>
-              {exams.map((row, index) => (
+              {examRows.map((row, index) => (
                 <TableRow
                   hover
                   key={index}
                   sx={{
                     '&:hover': { backgroundColor: '#f9fafb' },
-                    transition: 'background-color 0.2s ease',
+                    transition: 'background-color 0.2s ease'
                   }}
                 >
                   {columns.map((column) => {
@@ -135,7 +146,7 @@ export default function ExaminationsTeacher() {
                 </TableRow>
               ))}
 
-              {exams.length === 0 && (
+              {examRows.length === 0 && (
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}

@@ -15,7 +15,12 @@ export default function Examinations() {
   const [exams, setExams] = useState([]);
   const [addExam, setAddExam] = useState(false);
   const [editExam, setEditExam] = useState(null);
-  const [formData, setFormData] = useState({ subject: '', examType: '', examDate: new Date().toISOString().split('T')[0] });
+  const [formData, setFormData] = useState({
+  examSession: '',
+  examType: '',
+  subjects: [{ subject: '', examDate: new Date().toISOString().split('T')[0] }]
+});
+
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('success');
 
@@ -41,19 +46,29 @@ export default function Examinations() {
   };
 
   const fetchExams = async (classId = '') => {
-    try {
-      const url = classId ? `${baseAPI}/examination/class/${classId}` : `${baseAPI}/examination/all`;
-      const res = await axios.get(url);
-      const formatted = res.data.exams.map((exam) => ({
-        ...exam,
-        subject_name: exam.subject.subject_name,
+  try {
+    const url = classId
+      ? `${baseAPI}/examination/class/${classId}`
+      : `${baseAPI}/examination/all`;
+
+    const res = await axios.get(url);
+    const formatted = res.data.exams.flatMap((exam) =>
+      exam.subjects.map((sub) => ({
+        subject_name: sub.subject.subject_name || sub.subject.name,
+        examDate: sub.examDate,
         class: `${exam.class.class_text} ${exam.class.class_num}`,
-      }));
-      setExams(formatted);
-    } catch (err) {
-      console.error('Error fetching exams:', err);
-    }
-  };
+        examType: exam.examType,
+        examSession: exam.examSession,
+        _id: exam._id,
+      }))
+    );
+
+    setExams(formatted);
+  } catch (err) {
+    console.error('Error fetching exams:', err);
+  }
+};
+
 
   const fetchSubjects = async () => {
     try {
@@ -64,36 +79,32 @@ export default function Examinations() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (editExam) {
-        await axios.patch(`${baseAPI}/examination/update/${editExam._id}`, {
-          ...formData,
-          classId: selectedClass,
-        });
-        setMessage("Exam updated successfully");
-        setMessageType("success");
-      } else {
-        await axios.post(`${baseAPI}/examination/create`, {
-          ...formData,
-          classId: selectedClass,
-        });
-        setMessage("Exam created successfully");
-        setMessageType("success");
-      }
-      handleCancel();
-    } catch (err) {
-      console.error('Error submitting exam:', err);
-      setMessage(editExam ? "Exam update failed. Try again" : "Exam creation failed. Try again");
-      setMessageType("error");
+  e.preventDefault();
+  try {
+    const payload = {
+      ...formData,
+      classId: selectedClass
+    };
+
+    if (editExam) {
+      await axios.patch(`${baseAPI}/examination/update/${editExam._id}`, payload);
+      setMessage("Exam updated successfully");
+      setMessageType("success");
+    } else {
+      await axios.post(`${baseAPI}/examination/create`, payload);
+      setMessage("Exam created successfully");
+      setMessageType("success");
     }
-  };
+
+    handleCancel();
+  } catch (err) {
+    console.error('Error submitting exam:', err);
+    setMessage(editExam ? "Exam update failed. Try again" : "Exam creation failed. Try again");
+    setMessageType("error");
+  }
+};
+
 
   const handleCancel = () => {
     setFormData((prev) => ({ ...prev, subject: '', examType: '' }));
@@ -101,14 +112,47 @@ export default function Examinations() {
     setEditExam(null);
   }
 
-  const handleEdit = (exam) => {
-    setEditExam(exam);
+  const addSubjectField = () => {
+  setFormData((prev) => ({
+    ...prev,
+    subjects: [...prev.subjects, { subject: '', examDate: new Date().toISOString().split('T')[0] }]
+  }));
+};
+
+const updateSubjectField = (index, field, value) => {
+  const updatedSubjects = [...formData.subjects];
+  updatedSubjects[index][field] = value;
+  setFormData((prev) => ({ ...prev, subjects: updatedSubjects }));
+};
+
+const removeSubjectField = (index) => {
+  const updatedSubjects = formData.subjects.filter((_, idx) => idx !== index);
+  setFormData((prev) => ({ ...prev, subjects: updatedSubjects }));
+};
+
+
+  const handleEdit = async (flattenedExamRow) => {
+  try {
+    const res = await axios.get(`${baseAPI}/examination/id/${flattenedExamRow._id}`);
+    const fullExam = res.data.exam;
+
+    setEditExam(fullExam);
     setFormData({
-      examDate: exam.examDate.split('T')[0],
-      subject: exam.subject._id,
-      examType: exam.examType
+      examSession: fullExam.examSession,
+      examType: fullExam.examType,
+      subjects: fullExam.subjects.map((s) => ({
+        subject: s.subject._id || s.subject,
+        examDate: s.examDate?.split('T')[0],
+      })),
     });
-  };
+  } catch (error) {
+    console.error('Error fetching full exam for edit:', error);
+    setMessage('Failed to fetch exam for editing');
+    setMessageType('error');
+  }
+};
+
+
 
   const handleDelete = async (examId) => {
     const confirm = window.confirm('Are you sure you want to delete this examination?');
@@ -189,75 +233,79 @@ export default function Examinations() {
             alignItems="center"
             minHeight="100vh"
           >
-            <Paper elevation={4} sx={{ p: 4, width: '100%', maxWidth: 480, borderRadius: 3 }}>
+            <Paper elevation={4} sx={{ p: 4, width: '100%', maxWidth: 550, borderRadius: 3 }}>
               <Typography variant="h5" align="center" gutterBottom sx={{ fontWeight: 600 }}>
-                {!editExam?"Create New Exam":"Update Exam"}
+                {editExam ? "Update Exam" : "Create New Exam"}
               </Typography>
 
-              <Box
-                component="form"
-                onSubmit={handleSubmit}
-                sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}
-              >
+              <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
                 <TextField
-                  label="Exam Date"
-                  name="examDate"
-                  type="date"
+                  label="Exam Session (e.g., July 2025)"
+                  name="examSession"
                   fullWidth
-                  InputLabelProps={{ shrink: true }}
-                  value={formData.examDate}
-                  onChange={handleChange}
                   required
+                  value={formData.examSession}
+                  onChange={(e) => setFormData({ ...formData, examSession: e.target.value })}
                 />
-
-                <FormControl fullWidth required>
-                  <InputLabel>Subject</InputLabel>
-                  <Select
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    label="Subject"
-                  >
-                    {subjectList.map((s) => (
-                      <MenuItem key={s._id} value={s._id}>
-                        {s.subject_name || s.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
 
                 <FormControl fullWidth required>
                   <InputLabel>Exam Type</InputLabel>
                   <Select
                     name="examType"
                     value={formData.examType}
-                    onChange={handleChange}
+                    onChange={(e) => setFormData({ ...formData, examType: e.target.value })}
                     label="Exam Type"
                   >
                     {examTypes.map((type) => (
-                      <MenuItem key={type} value={type}>
-                        {type}
-                      </MenuItem>
+                      <MenuItem key={type} value={type}>{type}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
 
-                <Box display="flex" justifyContent="space-between" gap={2} mt={1}>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleCancel}
-                    sx={{ flex: 1 }}
-                  >
+                <Typography fontWeight={600} mt={1}>Subjects & Dates</Typography>
+
+                {formData.subjects.map((subj, idx) => (
+                  <Box key={idx} sx={{ display: 'flex', gap: 1 }}>
+                    <FormControl sx={{ flex: 2 }} required>
+                      <InputLabel>Subject</InputLabel>
+                      <Select
+                        value={subj.subject}
+                        onChange={(e) => updateSubjectField(idx, 'subject', e.target.value)}
+                        label="Subject"
+                      >
+                        {subjectList.map((s) => (
+                          <MenuItem key={s._id} value={s._id}>{s.subject_name || s.name}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    <TextField
+                      label="Exam Date"
+                      type="date"
+                      fullWidth
+                      sx={{ flex: 2 }}
+                      InputLabelProps={{ shrink: true }}
+                      value={subj.examDate}
+                      onChange={(e) => updateSubjectField(idx, 'examDate', e.target.value)}
+                      required
+                    />
+
+                    <Button color="error" onClick={() => removeSubjectField(idx)} sx={{ alignSelf: 'center' }}>
+                      ❌
+                    </Button>
+                  </Box>
+                ))}
+
+                <Button variant="outlined" onClick={addSubjectField}>
+                  ➕ Add Subject
+                </Button>
+
+                <Box display="flex" justifyContent="space-between" gap={2} mt={2}>
+                  <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ flex: 1 }}>
                     Cancel
                   </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    sx={{ flex: 1 }}
-                  >
-                    {editExam?"Update":"Submit"}
+                  <Button variant="contained" color="primary" type="submit" sx={{ flex: 1 }}>
+                    {editExam ? "Update" : "Submit"}
                   </Button>
                 </Box>
               </Box>

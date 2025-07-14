@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Paper, Typography, Table, TableCell, TableRow, TableBody, TableHead, TableContainer } from '@mui/material';
+import {
+  Box, Paper, Typography, Table, TableCell, TableRow,
+  TableBody, TableHead, TableContainer
+} from '@mui/material';
 import axios from 'axios';
 import { baseAPI } from '../../../environment';
 
@@ -9,7 +12,7 @@ export default function ExaminationsStudent() {
 
   const columns = [
     { id: 'subject_name', label: 'Subject', minWidth: 130 },
-    { id: 'class', label: 'Class', minWidth: 80 },
+    { id: 'class', label: 'Class', minWidth: 100 },
     {
       id: 'examDate', label: 'Exam Date', minWidth: 140,
       format: (value) => new Date(value).toDateString().slice(4)
@@ -27,15 +30,21 @@ export default function ExaminationsStudent() {
       setStudent(studentData);
 
       const classId = studentData.student_class._id;
+
       const examRes = await axios.get(`${baseAPI}/examination/class/${classId}`, {
         headers: { Authorization: localStorage.getItem('token') },
       });
 
-      const formatted = examRes.data.exams.map((exam) => ({
-        ...exam,
-        subject_name: exam.subject.subject_name,
-        class: `${exam.class.class_text} ${exam.class.class_num}`,
-      }));
+      // Flatten subjects
+      const formatted = examRes.data.exams.flatMap((exam) =>
+        exam.subjects.map((sub) => ({
+          subject_name: sub.subject.subject_name,
+          examDate: sub.examDate,
+          class: `${exam.class.class_text} ${exam.class.class_num}`,
+          examType: exam.examType,
+          _id: exam._id,
+        }))
+      );
 
       setExams(formatted);
     } catch (err) {
@@ -62,7 +71,7 @@ export default function ExaminationsStudent() {
           boxShadow: 3,
         }}
       >
-        <TableContainer sx={{ maxHeight: '66vh' }}>
+        <TableContainer sx={{ maxHeight: '70vh' }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>

@@ -20,6 +20,7 @@ import attendanceRouter from './routes/attendance.routes.js';
 import examinationRouter from './routes/examination.routes.js';
 import assignmentRouter from './routes/assignment.routes.js';
 import noticeRouter from './routes/notice.routes.js';
+import resultRouter from './routes/result.routes.js';
 
 const app = express();
 const corsOptions = {exposedHeaders: ['Authorization']};
@@ -45,6 +46,7 @@ app.use('/api/attendance',attendanceRouter);
 app.use('/api/examination',examinationRouter);
 app.use('/api/notice',noticeRouter);
 app.use('/api/assignment',assignmentRouter);
+app.use('/api/result',resultRouter);
 
 
 
