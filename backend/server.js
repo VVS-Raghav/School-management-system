@@ -1,9 +1,14 @@
 import express from 'express';
 import cors from 'cors';
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import schoolRouter from './routes/school.routes.js';
 import classRouter from './routes/class.routes.js';
@@ -13,6 +18,7 @@ import teacherRouter from './routes/teacher.routes.js';
 import scheduleRouter from './routes/schedule.routes.js';
 import attendanceRouter from './routes/attendance.routes.js';
 import examinationRouter from './routes/examination.routes.js';
+import assignmentRouter from './routes/assignment.routes.js';
 import noticeRouter from './routes/notice.routes.js';
 
 const app = express();
@@ -21,6 +27,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/files', express.static(path.join(__dirname, 'uploads')));
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {console.log('Connected to MongoDB');})
@@ -37,6 +44,7 @@ app.use('/api/schedule',scheduleRouter);
 app.use('/api/attendance',attendanceRouter);
 app.use('/api/examination',examinationRouter);
 app.use('/api/notice',noticeRouter);
+app.use('/api/assignment',assignmentRouter);
 
 
 

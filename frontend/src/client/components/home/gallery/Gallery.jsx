@@ -46,50 +46,120 @@ export default function Gallery() {
   },[]);
 
   return (
-    <Box>
-        <Typography variant="h4" component="h2" sx={{ mb: 2 ,textAlign: 'center',marginTop: '30px',marginBottom: '20px'}}>
-            Registered Schools
-        </Typography>
-        <ImageList sx={{ width: '100%', height: 'auto' }}>
-            {schools.map((school,index) => (
-                <ImageListItem key={index} >
-                <img
-                    srcSet={`./images/${school.school_image}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                    src={`./images/${school.school_image}?w=248&fit=crop&auto=format`}
-                    alt={'alt'}
-                    loading="lazy"
-                    onClick={()=>handleOpen(school)}
-                    style={{ cursor: 'pointer', width: '100%', height: 'auto',maxHeight: '400px' }}
-                />
-                <ImageListItemBar
-                    title={school.school_name}
-                    position="below"
-                    sx={{ textAlign: 'center', backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
-                />
-                </ImageListItem>
-            ))}
-        </ImageList>
-        <div>
-            <Modal
-                open={open && selectedSchool !== null}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-            <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2, textAlign: 'center' }}>
-                    {selectedSchool ? selectedSchool.school_name : ''}
-                </Typography>
-                {selectedSchool && (
-                <img
-                    src={`/images/${selectedSchool.school_image}`}
-                    alt="alt"
-                    style={{ width: '100%', maxHeight: '500px' }}
-                />
-                )}
-            </Box>
-            </Modal>
-        </div>
+    <Box sx={{ px: 2, py: 4 }}>
+  <Typography
+    variant="h4"
+    component="h2"
+    sx={{
+      mb: 4,
+      textAlign: 'center',
+      fontWeight: 600,
+      color: 'primary.main',
+      textTransform: 'uppercase',
+      letterSpacing: 1,
+    }}
+  >
+    Registered Schools
+  </Typography>
+
+  <ImageList
+    cols={3}
+    gap={20}
+    sx={{
+      width: '100%',
+      m: 0,
+      '@media (max-width: 900px)': {
+        cols: 2,
+      },
+      '@media (max-width: 600px)': {
+        cols: 1,
+      },
+    }}
+  >
+    {schools.map((school, index) => (
+      <ImageListItem key={index}>
+        <img
+          src={`/images/${school.school_image}`}
+          alt={school.school_name}
+          loading="lazy"
+          onClick={() => handleOpen(school)}
+          style={{
+            cursor: 'pointer',
+            width: '100%',
+            height: 'auto',
+            maxHeight: 300,
+            objectFit: 'cover',
+            borderRadius: 12,
+            boxShadow: '0 4px 10px rgba(0,0,0,0.15)',
+            transition: 'transform 0.3s',
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
+          onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+        />
+        <ImageListItemBar
+          title={school.school_name}
+          position="below"
+          sx={{
+            textAlign: 'center',
+            fontWeight: 500,
+            fontSize: '1.1rem',
+            mt: 1,
+            backgroundColor: 'transparent',
+            color: 'black',
+          }}
+        />
+      </ImageListItem>
+    ))}
+  </ImageList>
+
+  {/* Modal */}
+  <Modal
+    open={open && selectedSchool !== null}
+    onClose={handleClose}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description"
+  >
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '90%',
+        maxWidth: 600,
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        p: 3,
+        borderRadius: 3,
+        textAlign: 'center',
+      }}
+    >
+      {selectedSchool && (
+        <>
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            sx={{ mb: 2, fontWeight: 600, color: 'primary.main' }}
+          >
+            {selectedSchool.school_name}
+          </Typography>
+          <img
+            src={`/images/${selectedSchool.school_image}`}
+            alt={selectedSchool.school_name}
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '400px',
+              borderRadius: 8,
+              objectFit: 'cover',
+            }}
+          />
+        </>
+      )}
     </Box>
+  </Modal>
+</Box>
+
   );
 }

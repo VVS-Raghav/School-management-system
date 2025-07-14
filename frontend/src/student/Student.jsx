@@ -27,6 +27,8 @@ import RuleIcon from '@mui/icons-material/Rule';
 import QuizIcon from '@mui/icons-material/Quiz';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+
 
 const drawerWidth = 220;
 
@@ -121,13 +123,14 @@ export default function Student() {
   };
 
   const navArr = [
-    {link:"/",component:"Home",icon:HomeIcon},
-    {link:"/student",component:"Details",icon:DashboardCustomizeIcon},
-    {link:"/student/schedule",component:"Schedule",icon:CalendarMonthIcon},
-    {link:"/student/attendance",component:"Attendance",icon:RuleIcon},
-    {link:"/student/examinations",component:"Examinations",icon:QuizIcon},
-    {link:"/student/notice",component:"Notice",icon:NotificationsActiveIcon},
-    {link:"/logout",component:"Logout",icon:LogoutIcon}
+    { link: "/", component: "Home", icon: HomeIcon },
+    { link: "/student", component: "Details", icon: DashboardCustomizeIcon },
+    { link: "/student/schedule", component: "Schedule", icon: CalendarMonthIcon },
+    { link: "/student/attendance", component: "Attendance", icon: RuleIcon },
+    { link: "/student/assignments", component: "Assignments", icon: LibraryBooksIcon },
+    { link: "/student/examinations", component: "Examinations", icon: QuizIcon },
+    { link: "/student/notice", component: "Notice", icon: NotificationsActiveIcon },
+    { link: "/logout", component: "Logout", icon: LogoutIcon }
   ]
 
   const navigate = useNavigate();
@@ -177,14 +180,14 @@ export default function Student() {
                   },
                   open
                     ? {
-                        justifyContent: 'initial',
-                      }
+                      justifyContent: 'initial',
+                    }
                     : {
-                        justifyContent: 'center',
-                      },
+                      justifyContent: 'center',
+                    },
                 ]}
 
-                onClick={()=>handleNavigation(navItem.link)}
+                onClick={() => handleNavigation(navItem.link)}
               >
                 <ListItemIcon
                   sx={[
@@ -194,25 +197,25 @@ export default function Student() {
                     },
                     open
                       ? {
-                          mr: 3,
-                        }
+                        mr: 3,
+                      }
                       : {
-                          mr: 'auto',
-                        },
+                        mr: 'auto',
+                      },
                   ]}
                 >
-                  {<navItem.icon/>}
+                  {<navItem.icon />}
                 </ListItemIcon>
                 <ListItemText
                   primary={navItem.component}
                   sx={[
                     open
                       ? {
-                          opacity: 1,
-                        }
+                        opacity: 1,
+                      }
                       : {
-                          opacity: 0,
-                        },
+                        opacity: 0,
+                      },
                   ]}
                 />
               </ListItemButton>
@@ -223,7 +226,7 @@ export default function Student() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Outlet/>
+        <Outlet />
       </Box>
     </Box>
   );

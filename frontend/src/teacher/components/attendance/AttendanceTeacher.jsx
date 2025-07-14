@@ -81,6 +81,7 @@ export default function AttendanceTeacher() {
       });
       setMessageType('success');
       setMessage(resp.data.message);
+      setIsMarked(true);
     }
     catch (err) {
       console.error('Error submitting attendance:', err);

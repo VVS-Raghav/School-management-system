@@ -59,91 +59,90 @@ export default function Login() {
 
   return (
     <Box
-      sx={{
-        background: 'url(https://static.vecteezy.com/system/resources/previews/047/784/019/non_2x/an-illustration-of-online-learning-with-a-group-of-students-using-laptops-and-a-teacher-presenting-a-pie-chart-free-vector.jpg)',
-        backgroundSize: '185vh',
-        textAlign: 'center',
-        backgroundRepeat: 'no-repeat',
-        height: '83vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflowX: 'hidden',
-      }}
+  sx={{
+    background:
+      'url(https://static.vecteezy.com/system/resources/previews/047/784/019/non_2x/an-illustration-of-online-learning-with-a-group-of-students-using-laptops-and-a-teacher-presenting-a-pie-chart-free-vector.jpg)',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    px: 2,
+  }}
+>
+  {message && (
+    <MessageSnackbar message={message} messageType={messageType} handleClose={handleClose} />
+  )}
+
+  <Box
+    component="form"
+    onSubmit={formik.handleSubmit}
+    sx={{
+      width: { xs: '100%', sm: '400px' },
+      bgcolor: 'rgba(255, 255, 255, 0.95)',
+      p: 4,
+      borderRadius: 3,
+      boxShadow: 6,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 2,
+    }}
+  >
+    <Typography
+      variant="h4"
+      textAlign="center"
+      fontWeight={600}
+      color="primary"
+      sx={{ mb: 1 }}
     >
-      {message && <MessageSnackbar message={message} messageType={messageType} handleClose={handleClose} />}
+      Login
+    </Typography>
 
-      <Box
-        component="form"
-        sx={{
-          '& > :not(style)': { m: 1, width: '50ch' },
-          display: 'flex',
-          flexDirection: 'column',
-          width: '32vw',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: 3,
-          padding: 3.5,
-          backgroundColor: 'rgba(255, 255, 255)',
-        }}
-        noValidate
-        autoComplete="off"
-        onSubmit={formik.handleSubmit}
+    <FormControl required size="small" fullWidth>
+      <InputLabel id="role-label">Login As</InputLabel>
+      <Select
+        labelId="role-label"
+        name="role"
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+        onBlur={formik.handleBlur}
+        label="Login As"
       >
-        <Typography variant="h2" sx={{ textAlign: 'center', color: 'darkblue' }}>
-          Login
-        </Typography>
+        <MenuItem value="student">Student</MenuItem>
+        <MenuItem value="teacher">Teacher</MenuItem>
+        <MenuItem value="school">School Admin</MenuItem>
+      </Select>
+    </FormControl>
 
-        <FormControl
-          required
-          size="small"
-          sx={{ maxWidth: 110, mt: 2, alignSelf: 'flex-start' }}
-        >
-          <InputLabel id="role-label" sx={{ fontSize: '0.95rem' }}>Login As</InputLabel>
-          <Select
-            labelId="role-label"
-            name="role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            onBlur={formik.handleBlur}
-            label="Login As"
-          >
-            <MenuItem value="student">Student</MenuItem>
-            <MenuItem value="teacher">Teacher</MenuItem>
-            <MenuItem value="school">Admin</MenuItem>
-          </Select>
-        </FormControl>
+    <TextField
+      fullWidth
+      name="email"
+      label="Email"
+      value={formik.values.email}
+      onChange={formik.handleChange}
+      onBlur={formik.handleBlur}
+      error={formik.touched.email && Boolean(formik.errors.email)}
+      helperText={formik.touched.email && formik.errors.email}
+    />
 
+    <TextField
+      fullWidth
+      type="password"
+      name="password"
+      label="Password"
+      value={formik.values.password}
+      onChange={formik.handleChange}
+      onBlur={formik.handleBlur}
+      error={formik.touched.password && Boolean(formik.errors.password)}
+      helperText={formik.touched.password && formik.errors.password}
+    />
 
-        <TextField
-          name="email"
-          label="Email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        />
-        {formik.touched.email && formik.errors.email && (
-          <div style={{ color: 'red', margin: 0, padding: 0 }}>{formik.errors.email}</div>
-        )}
-
-        <TextField
-          type="password"
-          name="password"
-          label="Password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-        />
-        {formik.touched.password && formik.errors.password && (
-          <div style={{ color: 'red', margin: 0, padding: 0 }}>{formik.errors.password}</div>
-        )}
-
-        <Button type="submit" variant="contained">
-          Submit
-        </Button>
-      </Box>
-    </Box>
+    <Button type="submit" variant="contained" size="large" fullWidth>
+      Submit
+    </Button>
+  </Box>
+</Box>
 
   );
 }

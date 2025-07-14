@@ -15,6 +15,7 @@ import Login from './client/components/login/Login.jsx'
 import Register from './client/components/register/Register.jsx'
 import Teacher from './teacher/Teacher.jsx'
 import AttendanceTeacher from './teacher/components/attendance/AttendanceTeacher.jsx';
+import AssignmentTeacher from './teacher/components/assignment/AssignmentTeacher.jsx';
 import ScheduleTeacher from './teacher/components/schedule/ScheduleTeacher.jsx';
 import TeacherDetails from './teacher/components/teacher_details/TeacherDetails.jsx';
 import ExaminationsTeacher from './teacher/components/examinations/ExaminationsTeacher.jsx';
@@ -31,6 +32,7 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import ProtectedRoute from './guard/ProtectedRoute.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import Logout from './client/components/logout/Logout.jsx';
+import AssignmentStudent from './student/components/assignment/AssignmentStudent.jsx';
 
 function App() {
 
@@ -59,6 +61,7 @@ function App() {
             <Route index element={<StudentDetails/>}/>
             <Route path='attendance' element={<AttendanceStudent/>}/>
             <Route path='schedule' element={<ScheduleStudent/>}/>
+            <Route path='assignments' element={<AssignmentStudent/>}/>
             <Route path='examinations' element={<ExaminationsStudent/>}/>
             <Route path='notice' element={<NoticeStudent/>}/>
           </Route>
@@ -69,6 +72,7 @@ function App() {
             <Route index element={<TeacherDetails/>}/>
             <Route path='attendance' element={<AttendanceTeacher/>}/>
             <Route path='schedule' element={<ScheduleTeacher/>}/>
+            <Route path='assignments' element={<AssignmentTeacher/>}/>
             <Route path='examinations' element={<ExaminationsTeacher/>}/>
             <Route path='notice' element={<NoticeTeacher/>}/>
           </Route>

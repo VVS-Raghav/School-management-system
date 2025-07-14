@@ -27,6 +27,7 @@ import RuleIcon from '@mui/icons-material/Rule';
 import QuizIcon from '@mui/icons-material/Quiz';
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 
 
 const drawerWidth = 220;
@@ -126,6 +127,7 @@ export default function Teacher() {
     {link:"/teacher",component:"TeacherDetails",icon:DashboardCustomizeIcon},
     {link:"/teacher/schedule",component:"Schedule",icon:CalendarMonthIcon},
     {link:"/teacher/attendance",component:"Attendance",icon:RuleIcon},
+    {link:"/teacher/assignments",component:"Assignments",icon:LibraryBooksIcon},
     {link:"/teacher/examinations",component:"Examinations",icon:QuizIcon},
     {link:"/teacher/notice",component:"Notice",icon:NotificationsActiveIcon},
     {link:"/logout",component:"Logout",icon:LogoutIcon}

@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { baseAPI } from "../../../environment.js";
-import { Box, Typography, Button, TextField, CardMedia } from "@mui/material";
+import { Box, Typography, Button, TextField, CardMedia, Modal } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import MessageSnackbar from "../../../basic_utility/snackbar/MessageSnackbar.jsx";
+import SchoolDetails from "./SchoolDetails.jsx";
+import SchoolStats from "./SchoolStats.jsx";
 
 export default function Dashboard() {
 
@@ -30,8 +32,6 @@ export default function Dashboard() {
     fetchSchool();
   }, [message]);
 
-
-  // image handling
 
   const addImage = (e) => {
     const file = e.target.files[0];
@@ -61,7 +61,6 @@ export default function Dashboard() {
     axios.patch(`${baseAPI}/school/update`, fd).then((resp) => {
       setMessage(resp.data.message);
       setMessageType('success');
-      handleClearFile();
     })
       .catch((error) => {
         setMessage(error.response?.data?.message);
@@ -71,22 +70,48 @@ export default function Dashboard() {
 
   return (
     <>
-      <h2>Dashboard</h2>
-      {message && <MessageSnackbar message={message} messageType={messageType} handleClose={handleClose} />}
-      {edit &&
+      <Typography
+        variant="h4"
+        sx={{
+          fontWeight: 700,
+          textAlign: 'center',
+          mb: 4,
+          background: 'linear-gradient(90deg, #004aad, #00b4d8)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          textTransform: 'uppercase',
+          letterSpacing: '1px'
+        }}
+      >
+        School Dashboard
+      </Typography>
 
+
+      {message && <MessageSnackbar message={message} messageType={messageType} handleClose={handleClose} />}
+      <Modal
+        open={edit}
+        onClose={() => setEdit(false)}
+        aria-labelledby="schedule-modal-title"
+        aria-describedby="schedule-modal-description"
+      >
         <Box
           component="form"
           sx={{
-            '& > :not(style)': { m: 1, width: '50ch' },
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '90%',
+            maxWidth: 500,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 3,
+            borderRadius: 2,
             display: 'flex',
             flexDirection: 'column',
-            width: '100%',
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: 3,
-            padding: 5,
-            backgroundColor: 'rgba(255, 255, 255)'
+            '& > :not(style)': { m: 1, width: '100%' }
           }}
           noValidate
           autoComplete="off"
@@ -112,11 +137,11 @@ export default function Dashboard() {
           />
 
           <Button onClick={handleSubmit} variant="contained">Submit</Button>
-          <Button onClick={handleClearFile} variant="contained" sx={{ background: 'white', color: 'black' }}>Cancel</Button>
+          <Button onClick={handleClearFile} variant="outlined">Cancel</Button>
 
         </Box>
+      </Modal>
 
-      }
       {school && (
         <Box
           sx={{
@@ -128,6 +153,7 @@ export default function Dashboard() {
             borderRadius: 4,
             overflow: 'hidden',
             boxShadow: 4,
+            mb:6
           }}
         >
           <Box
@@ -156,14 +182,23 @@ export default function Dashboard() {
             <Typography
               variant="h3"
               sx={{
-                color: 'white',
+                color: '#ffffff',
                 fontWeight: 'bold',
                 textAlign: 'center',
-                textShadow: '2px 2px 8px rgba(0,0,0,0.5)',
+                padding: '0.5rem 1rem',
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                borderRadius: 2,
+                textShadow: `
+                  0px 0px 6px rgba(0,0,0,0.7),
+                  0px 0px 12px rgba(0,0,0,0.5)
+                `,
+                maxWidth: '100%',
+                wordWrap: 'break-word'
               }}
             >
               {school.school_name}
             </Typography>
+
 
             <Box
               sx={{
@@ -193,7 +228,8 @@ export default function Dashboard() {
           </Box>
         </Box>
       )}
-
+      <SchoolDetails />
+      <SchoolStats/>
     </>
   );
 }
