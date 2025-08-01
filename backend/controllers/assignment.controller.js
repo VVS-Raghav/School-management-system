@@ -1,13 +1,19 @@
+import fs from 'fs';
+import path from 'path';
 import formidable from 'formidable';
 import Assignment from '../models/assignment.model.js';
 import Student from '../models/student.model.js';
-import path from 'path';
-import fs from 'fs';
 
 export const uploadAssignment = async (req, res) => {
+  const uploadDir = path.join(process.cwd(), 'uploads');
+
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
   const form = formidable({
     multiples: false,
-    uploadDir: './uploads',
+    uploadDir: uploadDir,
     keepExtensions: true,
   });
 
@@ -32,7 +38,7 @@ export const uploadAssignment = async (req, res) => {
 
     const newAssignment = new Assignment({
       title,
-      deadline: deadline,
+      deadline,
       classId,
       file: path.basename(file.filepath),
     });
@@ -54,7 +60,6 @@ export const getStudentAssignments = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Student not found' });
     }
 
-    // const today = dayjs().startOf('day').toDate()
     const assignments = await Assignment.find({
       classId: student.student_class,
       deadline: { $gte: new Date() }
