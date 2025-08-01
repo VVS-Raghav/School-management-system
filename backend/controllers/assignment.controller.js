@@ -1,7 +1,6 @@
 import formidable from 'formidable';
 import Assignment from '../models/assignment.model.js';
 import Student from '../models/student.model.js';
-import dayjs from 'dayjs';
 import path from 'path';
 import fs from 'fs';
 
