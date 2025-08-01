@@ -2,22 +2,23 @@ import React, { useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { Box, Typography, Button } from '@mui/material';
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import { green } from '@mui/material/colors';
 
 const slides = [
   {
     label: 'Welcome to ClassLinker',
     description: 'A smart education management system for schools and institutes.',
-    image: 'https://leadschool.in/wp-content/uploads/2024/01/Which-is-the-best-all-in-one-school-management-system-in-India.png',
+    image: 'https://res.cloudinary.com/dsbfjrerq/image/upload/v1754049323/school_img_p1whgm.png',
   },
   {
     label: 'Easy Class Scheduling',
     description: 'Manage teacher schedules and class timings effortlessly.',
-    image: 'https://www.groupcal.app/wp-content/uploads/2024/08/Header-back-to-school.jpeg',
+    image: 'https://res.cloudinary.com/dsbfjrerq/image/upload/v1754049155/Header-back-to-school_knddmx.jpg',
   },
   {
     label: 'Student Engagement',
     description: 'Boost student interaction with notes, chat, and assignments.',
-    image: 'https://miro.medium.com/v2/resize:fit:1200/1*WRrO82AXvX9L9tlnBFaDog.png',
+    image: 'https://res.cloudinary.com/dsbfjrerq/image/upload/v1754051114/temp3_sptunq.png',
   },
 ];
 
@@ -33,13 +34,13 @@ export default function Carousel() {
   };
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', mx: 'auto', p: 2 }}>
+    <Box sx={{ position: 'relative', width: '100%', mx: 'auto', px: 10,py:2 }}>
       <SwipeableViews index={index} onChangeIndex={(i) => setIndex(i)} enableMouseEvents>
         {slides.map((slide, i) => (
           <Box
             key={i}
             sx={{
-              height: 700,
+              height: 725,
               position: 'relative',
               borderRadius: 2,
               overflow: 'hidden',
@@ -76,15 +77,15 @@ export default function Carousel() {
 
       <Button
         onClick={handleBack}
-        sx={{ position: 'absolute', top: '50%', left: 10, transform: 'translateY(-50%)' ,bgcolor: 'hsla(0, 0.00%, 0.00%, 0.20)',}}
+        sx={{ position: 'absolute', top: '50%', left: 80, transform: 'translateY(-50%)' ,bgcolor: 'rgba(0, 0, 0, 0.34)',}}
       >
-        <ArrowBackIos />
+        <ArrowBackIos sx={{color:'orange'}} />
       </Button>
       <Button
         onClick={handleNext}
-        sx={{ position: 'absolute', top: '50%', right: 10, transform: 'translateY(-50%)' ,bgcolor: 'rgba(0,0,0,0.2)',}}
+        sx={{ position: 'absolute', top: '50%', right: 80, transform: 'translateY(-50%)' ,bgcolor: 'rgba(0, 0, 0, 0.34)',}}
       >
-        <ArrowForwardIos />
+        <ArrowForwardIos sx={{color:'orange'}}/>
       </Button>
     </Box>
   );

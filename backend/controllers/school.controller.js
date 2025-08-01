@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { fileURLToPath } from 'url';
 import formidable from "formidable";
 import School from "../models/school.model.js";
+import cloudinary from "../utils/cloudinary.js"; 
 import nodemailer from "nodemailer";
 import { generateOTP, verifyOTP } from "../utils/otp.js";
 dotenv.config();
@@ -31,7 +32,7 @@ export const sendOtp = async (req, res) => {
   });
 
   const mailOptions = {
-    from: `"ClassLinker Support" <${process.env.SMTP_USER}>`,
+    from: `"SmartSkool Support" <${process.env.SMTP_USER}>`,
     to: email,
     subject: "OTP for School Registration",
     html: `<h2>Your OTP is: ${otp}</h2><p>Valid for 5 minutes only.</p>`
@@ -62,7 +63,7 @@ export const registerSchool = async (req, res) => {
 
   form.parse(req, async (err, fields, files) => {
     if (err) {
-      console.error(err);
+      console.error("Form parse error:", err);
       return res.status(500).json({ success: false, message: "Form parsing failed" });
     }
 
@@ -72,45 +73,50 @@ export const registerSchool = async (req, res) => {
     const email = Array.isArray(fields.email) ? fields.email[0] : fields.email;
     const owner_name = Array.isArray(fields.owner_name) ? fields.owner_name[0] : fields.owner_name;
 
-    const schoolexists = await School.findOne({ email: email });
+    if (!email || !password || !school_name || !owner_name) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+
+    const schoolexists = await School.findOne({ email });
     if (schoolexists) {
       return res.status(409).json({ success: false, message: "School with this email already exists" });
     }
 
-    if (!photo || !photo.filepath || !photo.originalFilename) {
-      console.log("Image parsing failed:", files.image);
-      return res.status(400).json({ success: false, message: "Invalid file upload" });
+    if (!photo || !photo.filepath) {
+      return res.status(400).json({ success: false, message: "No image uploaded" });
     }
 
-
-    const originalFilename = photo.originalFilename.replace(" ", "_");
-    const newPath = path.join(__dirname, process.env.SCHOOL_IMG_PATH, originalFilename);
-
+    let uploadedImageUrl = "";
     try {
-      const photoData = fs.readFileSync(photo.filepath);
-      fs.writeFileSync(newPath, photoData);
-    } catch (error) {
-      console.error("File saving error:", error);
-      return res.status(500).json({ success: false, message: "Saving file failed" });
+      const uploadResult = await cloudinary.uploader.upload(photo.filepath, {
+        folder: "school_images",
+        public_id: `${school_name}_${Date.now()}`,
+      });
+      uploadedImageUrl = uploadResult.secure_url;
+    } catch (uploadErr) {
+      console.error("Cloudinary upload error:", uploadErr);
+      return res.status(500).json({ success: false, message: "Image upload failed" });
     }
 
-
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-
     try {
+      const hashedPassword = bcrypt.hashSync(password, 10);
+
       const newSchool = new School({
         school_name,
         email,
         owner_name,
         password: hashedPassword,
-        school_image: originalFilename,
+        school_image: uploadedImageUrl,
       });
 
       const savedSchool = await newSchool.save();
-      return res.status(201).json({ success: true, message: "School registered successfully", school: savedSchool });
+      return res.status(201).json({
+        success: true,
+        message: "School registered successfully",
+        school: savedSchool,
+      });
     } catch (e) {
-      console.error("DB save error:", e);
+      console.error("Database save error:", e);
       return res.status(500).json({ success: false, message: "Failed to save school" });
     }
   });
@@ -200,40 +206,32 @@ export const updateSchool = async (req, res) => {
         return res.status(404).json({ success: false, message: "School not found" });
       }
 
-      // ✅ Safely extract fields (if wrapped in arrays)
       Object.entries(fields).forEach(([key, value]) => {
         school[key] = Array.isArray(value) ? value[0] : value;
       });
 
-      // ✅ Handle optional image update
       const photo = Array.isArray(files.image) ? files.image[0] : files.image;
 
-      if (photo && photo.filepath && photo.originalFilename) {
-        const originalFilename = photo.originalFilename.trim().replace(/\s/g, "_").toLowerCase();
-        const filepath = photo.filepath;
-
-        // Delete old image if it exists
-        if (school.school_image) {
-          const oldImagePath = path.join(__dirname, process.env.SCHOOL_IMG_PATH, school.school_image);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
-          }
+      if (photo && photo.filepath) {
+        try {
+          const uploadResult = await cloudinary.uploader.upload(photo.filepath, {
+            folder: "school_images",
+            public_id: `school_${school._id}_${Date.now()}`,
+            overwrite: true,
+          });
+          school.school_image = uploadResult.secure_url;
+        } catch (uploadErr) {
+          console.error("Cloudinary upload error:", uploadErr);
+          return res.status(500).json({ success: false, message: "Image upload failed" });
         }
-
-        // Save new image to disk
-        const newImagePath = path.join(__dirname, process.env.SCHOOL_IMG_PATH, originalFilename);
-        const photoData = fs.readFileSync(filepath);
-        fs.writeFileSync(newImagePath, photoData);
-
-        // Update DB field
-        school.school_image = originalFilename;
       }
 
       await school.save();
+
       return res.status(200).json({
         success: true,
         message: "School updated successfully",
-        school: school,
+        school,
       });
     } catch (error) {
       console.error("Update error:", error);

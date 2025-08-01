@@ -63,7 +63,7 @@ export default function StudentDetails() {
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 1.5 }}>
           <CardMedia
             component="img"
-            image={`/images/${student.student_image}`}
+            image={`${student.student_image}`}
             alt={student.name}
             sx={{
               width: 280,

@@ -65,7 +65,7 @@ export default function Students() {
     if (!student) return;
     setEdit(true);
     setEditingStudentId(id);
-    setImageUrl(`/images/${student.student_image}`);
+    setImageUrl(`${student.student_image}`);
     formik.setValues({
       name: student.name,
       email: student.email,
@@ -418,7 +418,7 @@ export default function Students() {
                   <CardMedia
                     component="img"
                     height="160"
-                    image={`/images/${s.student_image}`}
+                    image={`${s.student_image}`}
                     alt={s.name}
                     sx={{ objectFit: 'cover', height: 250 }}
                   />

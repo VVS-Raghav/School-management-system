@@ -63,7 +63,7 @@ export default function TeacherDetails() {
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 1.5 }}>
           <CardMedia
             component="img"
-            image={`/images/${teacher.teacher_image}`}
+            image={`${teacher.teacher_image}`}
             alt={teacher.name}
             sx={{
               width: 280,

@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { fileURLToPath } from "url";
 import formidable from "formidable";
+import cloudinary from "../utils/cloudinary.js"; 
 import Teacher from "../models/teacher.model.js";
 
 dotenv.config();
@@ -37,14 +38,15 @@ export const registerTeacher = async (req, res) => {
     const existing = await Teacher.findOne({ email });
     if (existing) return res.status(409).json({ success: false, message: "Email already in use" });
 
-    const filename = photo.originalFilename.replace(/\s/g, "_").toLowerCase();
-    const newPath = path.join(__dirname, process.env.TEACHER_IMG_PATH, filename);
-
+    let cloudinaryUrl = "";
     try {
-      const photoData = fs.readFileSync(photo.filepath);
-      fs.writeFileSync(newPath, photoData);
-    } catch (err) {
-      return res.status(500).json({ success: false, message: "Saving image failed" });
+      const result = await cloudinary.uploader.upload(photo.filepath, {
+        folder: "teacher_images"
+      });
+      cloudinaryUrl = result.secure_url;
+    } catch (error) {
+      console.error("Cloudinary upload error:", error);
+      return res.status(500).json({ success: false, message: "Image upload failed" });
     }
 
     const hashedPassword = bcrypt.hashSync(password, 10);
@@ -58,7 +60,7 @@ export const registerTeacher = async (req, res) => {
         gender,
         qualification,
         school,
-        teacher_image: filename
+        teacher_image: cloudinaryUrl,
       });
 
       const saved = await teacher.save();
@@ -66,7 +68,7 @@ export const registerTeacher = async (req, res) => {
       res.status(201).json({
         success: true,
         message: "Teacher registered successfully",
-        teacher: saved
+        teacher: saved,
       });
     } catch (err) {
       console.error("Save error:", err);
@@ -171,14 +173,18 @@ export const updateTeacher = async (req, res) => {
   const form = formidable({ multiples: false, keepExtensions: true });
 
   form.parse(req, async (err, fields, files) => {
-    if (err) return res.status(400).json({ success: false, message: "Form parsing failed" });
+    if (err) {
+      return res.status(400).json({ success: false, message: "Form parsing failed" });
+    }
 
     try {
       const id = req.params.id;
       const schoolID = req.user.schoolId;
 
       const teacher = await Teacher.findOne({ _id: id, school: schoolID }).select("-password");
-      if (!teacher) return res.status(404).json({ success: false, message: "Teacher not found" });
+      if (!teacher) {
+        return res.status(404).json({ success: false, message: "Teacher not found" });
+      }
 
       Object.entries(fields).forEach(([key, value]) => {
         teacher[key] = Array.isArray(value) ? value[0] : value;
@@ -189,20 +195,21 @@ export const updateTeacher = async (req, res) => {
       if (photo && photo.filepath && photo.originalFilename) {
         const filename = photo.originalFilename.trim().replace(/\s/g, "_").toLowerCase();
 
-        if (teacher.teacher_image) {
-          const oldPath = path.join(__dirname, process.env.TEACHER_IMG_PATH, teacher.teacher_image);
-          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
-        }
+        const uploadResult = await cloudinary.uploader.upload(photo.filepath, {
+          folder: "teacher_images",
+          public_id: filename,
+        });
 
-        const newImagePath = path.join(__dirname, process.env.TEACHER_IMG_PATH, filename);
-        const photoData = fs.readFileSync(photo.filepath);
-        fs.writeFileSync(newImagePath, photoData);
-
-        teacher.teacher_image = filename;
+        teacher.teacher_image = uploadResult.secure_url;
       }
 
       await teacher.save();
-      res.status(200).json({ success: true, message: "Teacher updated successfully", teacher });
+
+      res.status(200).json({
+        success: true,
+        message: "Teacher updated successfully",
+        teacher,
+      });
     } catch (err) {
       console.error("Update error:", err);
       res.status(500).json({ success: false, message: "Internal server error" });

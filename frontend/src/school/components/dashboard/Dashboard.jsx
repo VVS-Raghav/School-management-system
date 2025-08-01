@@ -160,7 +160,7 @@ export default function Dashboard() {
             sx={{
               height: '100%',
               width: '100%',
-              background: `url("/images/${school.school_image}") center center / cover no-repeat`,
+              background: `url("${school.school_image}") center center / cover no-repeat`,
               filter: 'brightness(0.9)',
               transition: 'all 0.3s ease-in-out',
             }}

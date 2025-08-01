@@ -60,8 +60,7 @@ export default function Login() {
   return (
     <Box
   sx={{
-    background:
-      'url(https://static.vecteezy.com/system/resources/previews/047/784/019/non_2x/an-illustration-of-online-learning-with-a-group-of-students-using-laptops-and-a-teacher-presenting-a-pie-chart-free-vector.jpg)',
+    background: 'url(https://res.cloudinary.com/dsbfjrerq/image/upload/v1754052015/temp4_dzfeow.jpg)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     minHeight: '100vh',

@@ -109,12 +109,12 @@ function Navbar() {
           >
             SCHOOL MANAGEMENT SYSTEM
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, ml:88 }}>
             {pages.map((page,i) => (
               <Button
                 key={i}
                 onClick={()=>handleCloseNavMenu(page.link)}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: 'white', display: 'block', ml:3.3 }}
               >
                 {page.component}
               </Button>

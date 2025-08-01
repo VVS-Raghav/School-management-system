@@ -48,7 +48,7 @@ export default function Teachers() {
     if (!teacher) return;
     setEdit(true);
     setEditingTeacherId(id);
-    setImageUrl(`/images/${teacher.teacher_image}`);
+    setImageUrl(`${teacher.teacher_image}`);
     formik.setValues({
       name: teacher.name,
       email: teacher.email,
@@ -241,7 +241,7 @@ export default function Teachers() {
             <Grid item xs={12} sm={6} md={4} key={t._id}>
               <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', width: 280 }}>
                 <CardActionArea sx={{ flexGrow: 1 }}>
-                  <CardMedia component="img" height="160" image={`/images/${t.teacher_image}`} alt={t.name} sx={{ objectFit: 'cover', height: 250 }} />
+                  <CardMedia component="img" height="160" image={`${t.teacher_image}`} alt={t.name} sx={{ objectFit: 'cover', height: 250 }} />
                   <CardContent>
                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                       <strong>Name:</strong> {t.name}<br />
