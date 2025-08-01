@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Box,Paper,Typography,Table,TableBody,TableCell,TableContainer,TableRow,CardMedia} from '@mui/material';
+import {Box,Paper,Typography,Table,TableBody,TableCell,TableContainer,TableRow,CardMedia,CircularProgress} from '@mui/material';
 import axios from 'axios';
 import { baseAPI } from '../../../environment';
 
@@ -25,9 +25,9 @@ export default function TeacherDetails() {
 
   if (!teacher) {
     return (
-      <Typography variant="h6" align="center" color="error" mt={4}>
-        Failed to load teacher data.
-      </Typography>
+      <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
+        <CircularProgress />
+      </Box>
     );
   }
 

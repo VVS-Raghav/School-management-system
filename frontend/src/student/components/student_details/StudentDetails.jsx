@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableRow, CardMedia } from '@mui/material';
-import axios from 'axios';
+import { Box, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableRow, CardMedia, CircularProgress } from '@mui/material';
 import { baseAPI } from '../../../environment';
+import axios from 'axios';
 
 export default function StudentDetails() {
   const [student, setStudent] = useState(null);
@@ -25,9 +25,9 @@ export default function StudentDetails() {
 
   if (!student) {
     return (
-      <Typography variant="h6" align="center" color="error" mt={4}>
-        Failed to load student data.
-      </Typography>
+      <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
+        <CircularProgress />
+      </Box>
     );
   }
 
