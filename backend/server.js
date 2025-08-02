@@ -21,6 +21,8 @@ import examinationRouter from './routes/examination.routes.js';
 import assignmentRouter from './routes/assignment.routes.js';
 import noticeRouter from './routes/notice.routes.js';
 import resultRouter from './routes/result.routes.js';
+import feesRouter from './routes/fees.routes.js';
+import webhookRouter from './routes/webhook.routes.js';
 
 const app = express();
 const corsOptions = {exposedHeaders: ['Authorization']};
@@ -40,13 +42,15 @@ app.use('/api/school', schoolRouter);
 app.use('/api/class', classRouter);
 app.use('/api/subject', subjectRouter);
 app.use('/api/student', studentRouter);
-app.use('/api/teacher',teacherRouter);
-app.use('/api/schedule',scheduleRouter);
-app.use('/api/attendance',attendanceRouter);
-app.use('/api/examination',examinationRouter);
-app.use('/api/notice',noticeRouter);
-app.use('/api/assignment',assignmentRouter);
-app.use('/api/result',resultRouter);
+app.use('/api/teacher', teacherRouter);
+app.use('/api/schedule', scheduleRouter);
+app.use('/api/attendance', attendanceRouter);
+app.use('/api/examination', examinationRouter);
+app.use('/api/notice', noticeRouter);
+app.use('/api/fees', feesRouter);
+app.use('/api/assignment', assignmentRouter);
+app.use('/api/result', resultRouter);
+app.use('/api/stripe', webhookRouter);
 
 
 

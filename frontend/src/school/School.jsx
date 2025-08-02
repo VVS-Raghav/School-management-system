@@ -30,6 +30,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import QuizIcon from '@mui/icons-material/Quiz';
 import SchoolIcon from '@mui/icons-material/School';
 import HomeIcon from '@mui/icons-material/Home';
+import PaidIcon from '@mui/icons-material/Paid';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 220;
@@ -134,6 +135,7 @@ export default function School() {
     {link:"/school/schedule",component:"Schedule",icon:CalendarMonthIcon},
     {link:"/school/attendance",component:"Attendance",icon:RuleIcon},
     {link:"/school/examinations",component:"Examinations",icon:QuizIcon},
+    {link:"/school/fees",component:"Fee Management",icon:PaidIcon},
     {link:"/school/notice",component:"Notice",icon:NotificationsActiveIcon},
     {link:"/logout",component:"Logout",icon:LogoutIcon}
   ]

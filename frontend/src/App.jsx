@@ -7,6 +7,7 @@ import Schedule from './school/components/schedule/Schedule.jsx';
 import Students from './school/components/students/Students.jsx';
 import Teachers from './school/components/teachers/Teachers.jsx';
 import Notice from './school/components/notice/Notice.jsx';
+import FeeDetails from './school/components/fees/FeeDetails.jsx';
 import Examinations from './school/components/examinations/Examinations.jsx';
 import Subjects from './school/components/subjects/Subjects.jsx';
 import Client from './client/Client.jsx'
@@ -35,6 +36,9 @@ import ProtectedRoute from './guard/ProtectedRoute.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import Logout from './client/components/logout/Logout.jsx';
 import AssignmentStudent from './student/components/assignment/AssignmentStudent.jsx';
+import FeePayment from './student/components/fees/FeePayment.jsx';
+import SuccessPage from './student/components/fees/SuccessPage.jsx';
+import CancelPage from './student/components/fees/CancelPage.jsx';
 
 function App() {
 
@@ -53,6 +57,7 @@ function App() {
             <Route path='examinations' element={<Examinations/>}/>
             <Route path='subjects' element={<Subjects/>}/>
             <Route path='students' element={<Students/>}/>
+            <Route path='fees' element={<FeeDetails/>}/>
             <Route path='schedule' element={<Schedule/>}/>
             <Route path='notice' element={<Notice/>}/>
           </Route>
@@ -65,6 +70,9 @@ function App() {
             <Route path='schedule' element={<ScheduleStudent/>}/>
             <Route path='assignments' element={<AssignmentStudent/>}/>
             <Route path='examinations' element={<ExaminationsStudent/>}/>
+            <Route path='fees' element={<FeePayment/>}/>
+            <Route path="fees/success" element={<SuccessPage />} />
+            <Route path="fees/cancel" element={<CancelPage />} />
             <Route path='results' element={<ResultsStudent/>}/>
             <Route path='notice' element={<NoticeStudent/>}/>
           </Route>

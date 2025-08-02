@@ -26,6 +26,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import RuleIcon from '@mui/icons-material/Rule';
 import QuizIcon from '@mui/icons-material/Quiz';
 import HomeIcon from '@mui/icons-material/Home';
+import PaidIcon from '@mui/icons-material/Paid';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import AssessmentIcon from '@mui/icons-material/Assessment';
@@ -130,7 +131,8 @@ export default function Student() {
     { link: "/student/attendance", component: "Attendance", icon: RuleIcon },
     { link: "/student/assignments", component: "Assignments", icon: LibraryBooksIcon },
     { link: "/student/examinations", component: "Examinations", icon: QuizIcon },
-    {link:"/student/results",component:"Results",icon:AssessmentIcon},
+    { link: "/student/results", component:"Results", icon:AssessmentIcon},
+    { link: "/student/fees", component:"Fee Payments", icon:PaidIcon},
     { link: "/student/notice", component: "Notice", icon: NotificationsActiveIcon },
     { link: "/logout", component: "Logout", icon: LogoutIcon }
   ]

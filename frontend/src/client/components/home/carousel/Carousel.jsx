@@ -18,7 +18,7 @@ const slides = [
   {
     label: 'Student Engagement',
     description: 'Boost student interaction with notes, chat, and assignments.',
-    image: 'https://res.cloudinary.com/dsbfjrerq/image/upload/v1754051114/temp3_sptunq.png',
+    image: 'https://res.cloudinary.com/dsbfjrerq/image/upload/v1754129558/newSch3_qzxgtd.png',
   },
 ];
 
