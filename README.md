@@ -12,32 +12,35 @@ A modern full-stack School Management System built with **React**, **Node.js**, 
 ✅ **Attendance Tracking**  
 ✅ **OTP-based Email Verification**  
 ✅ **Secure Role-based Authentication**  
-✅ **File Uploads & Downloads**  
+✅ **File Uploads & Downloads via Cloudinary**  
 ✅ **Comment Thread Chat System**  
+✅ **Stripe-powered Fee Payment System**  
 ✅ **Analytics & Reporting (Upcoming)**  
-✅ **Real-time Notifications (Upcoming)**
+✅ **Real-time Notifications (Upcoming)**  
 
 ---
 
 ## 🧠 Tech Stack
 
-| Tech          | Usage                          |
-|---------------|--------------------------------|
-| **React.js**  | Frontend UI                    |
-| **MUI**       | UI Components                  |
-| **Node.js**   | Backend server                 |
-| **Express.js**| REST APIs                      |
-| **MongoDB**   | NoSQL Database                 |
-| **Formidable**| File upload handling           |
-| **JWT**       | Authentication                 |
-| **Day.js**    | Date management                |
+| Tech           | Usage                          |
+|----------------|--------------------------------|
+| **React.js**   | Frontend UI                    |
+| **MUI**        | UI Components                  |
+| **Node.js**    | Backend server                 |
+| **Express.js** | REST APIs                      |
+| **MongoDB**    | NoSQL Database                 |
+| **Formidable** | File upload handling           |
+| **Cloudinary** | Image & file hosting           |
+| **Stripe**     | Payment gateway integration    |
+| **JWT**        | Authentication                 |
+| **Day.js**     | Date management                |
 
 ---
 
 ## 🖥️ Pages & Roles
 
 - 👩‍🏫 **Admin Panel** – Manage schools, classes, users  
-- 🧑‍🎓 **Student Dashboard** – Assignments, attendance, notes  
+- 🧑‍🎓 **Student Dashboard** – Assignments, attendance, notes, fee payment  
 - 👨‍🏫 **Teacher Portal** – Upload assignments, mark attendance  
 - 🏫 **School Dashboard** – Institution profile, class handling  
 
@@ -46,9 +49,11 @@ A modern full-stack School Management System built with **React**, **Node.js**, 
 ## 🛠️ Getting Started
 
 ### Prerequisites
-- Node.js ≥ 18
-- MongoDB
-- npm or yarn
+- Node.js ≥ 18  
+- MongoDB  
+- Cloudinary Account  
+- Stripe Account  
+- npm or yarn  
 
 ### Backend Setup
 
@@ -56,15 +61,14 @@ A modern full-stack School Management System built with **React**, **Node.js**, 
 cd backend
 npm install
 npm run start
-```
 
 ### Frontend Setup
 
-```bash
+\```bash
 cd frontend
 yarn install
 yarn dev
-```
+\```
 
 > Set API base URL in `environment.js` inside `/frontend`.
 
